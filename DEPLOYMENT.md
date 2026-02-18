@@ -37,7 +37,7 @@ wrangler kv:namespace create ORDER_DB
 
 **示例输出**:
 ```
-🌀 Creating namespace with title "samacros-activation-ORDER_DB"
+🌀 Creating namespace with title "samacros-ORDER_DB"
 ✨ Success!
 Add the following to your wrangler.toml:
 kv_namespaces = [
@@ -101,7 +101,7 @@ wrangler pages secret put RSA_PRIVATE_KEY
 #### 首次部署:
 
 ```powershell
-wrangler pages deploy . --project-name samacros-activation
+wrangler pages deploy . --project-name samacros
 ```
 
 #### 后续更新:
@@ -114,7 +114,7 @@ wrangler pages deploy .
 
 ```
 ✨ Deployment complete!
-🌎 https://samacros-activation.pages.dev
+🌎 https://samacros.pages.dev
 ```
 
 ### 第 7 步: 绑定 KV 命名空间到项目
@@ -148,7 +148,7 @@ npm run dev
 node test-activation.js http://localhost:8788/api/activate
 
 # 测试生产环境
-node test-activation.js https://samacros-activation.pages.dev/api/activate
+node test-activation.js https://samacros.pages.dev/api/activate
 ```
 
 ---

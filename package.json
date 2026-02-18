@@ -1,5 +1,5 @@
 {
-  "name": "samacros-activation-center",
+  "name": "samacros-center",
   "version": "1.0.0",
   "description": "saMacros 离线激活中心 - Cloudflare Pages 全栈应用",
   "scripts": {

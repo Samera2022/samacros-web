@@ -1,4 +1,4 @@
-name = "samacros-activation"
+name = "samacros"
 compatibility_date = "2026-02-18"
 pages_build_output_dir = "."
 
