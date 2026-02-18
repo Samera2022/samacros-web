@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>saMacros Snapshot Activation Center</title>
+    <link rel="icon" type="image/png" href="imgs/saMacrosIcon.png">
     <style>
         :root {
             --bg-1: #0f172a;
@@ -61,6 +62,29 @@
         header {
             text-align: center;
             margin-bottom: 32px;
+            position: relative;
+        }
+
+        .header-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .lang-toggle {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--ink);
+            font-size: 12px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(148, 163, 184, 0.25);
+            transform: translateY(-1px);
         }
 
         h1 {
@@ -338,83 +362,202 @@
 <body>
     <div class="container">
         <header>
-            <h1>🔐 saMacros Activation Center</h1>
-            <p class="subtitle">2026 Edition - Secure Offline Activation</p>
+            <div class="header-actions">
+                <button class="lang-toggle" id="langToggle" title="切换语言">EN</button>
+            </div>
+            <h1 data-i18n="activating-title">🔐 saMacros 激活中心</h1>
+            <p class="subtitle" data-i18n="activating-subtitle">2026 版本 - 安全离线激活</p>
         </header>
 
         <form id="activationForm">
             <div class="input-group">
-                <label for="platform">Purchase Platform</label>
+                <label for="platform" data-i18n="activating-label-platform">购买平台</label>
                 <div class="custom-select" id="platformSelect">
-                    <button type="button" class="select-button">-- 选择购买平台 --</button>
+                    <button type="button" class="select-button" data-i18n="activating-select-placeholder">-- 选择购买平台 --</button>
                     <select id="platform" name="platform" required>
-                        <option value="">-- 选择购买平台 --</option>
-                        <option value="paypal">PayPal (Global)</option>
-                        <option value="other">其他平台</option>
+                        <option value="" data-i18n="activating-select-placeholder">-- 选择购买平台 --</option>
+                        <option value="paypal" data-i18n="activating-option-paypal">PayPal (Global)</option>
+                        <option value="other" data-i18n="activating-option-other">其他平台</option>
                     </select>
                     <div class="select-dropdown">
-                        <div class="select-option" data-value="">-- 选择购买平台 --</div>
-                        <div class="select-option" data-value="paypal">PayPal (Global)</div>
-                        <div class="select-option" data-value="other">其他平台</div>
+                        <div class="select-option" data-value="" data-i18n="activating-select-placeholder">-- 选择购买平台 --</div>
+                        <div class="select-option" data-value="paypal" data-i18n="activating-option-paypal">PayPal (Global)</div>
+                        <div class="select-option" data-value="other" data-i18n="activating-option-other">其他平台</div>
                     </div>
                 </div>
-                <p class="hint">选择您支付时使用的平台</p>
+                <p class="hint" data-i18n="activating-hint-platform">选择您支付时使用的平台</p>
             </div>
 
             <div class="input-group">
-                <label for="machineCode">Machine Code (HWID)</label>
+                <label for="machineCode" data-i18n="activating-label-machine">机器码 (HWID)</label>
                 <input 
                     type="text" 
                     id="machineCode" 
                     name="machineCode" 
                     placeholder="例如: SAM-A1B2C3D4E5F6"
+                    data-i18n-placeholder="activating-placeholder-machine"
                     required
                     autocomplete="off"
                 />
-                <p class="hint">从 saMacros 客户端复制您的机器码</p>
+                <p class="hint" data-i18n="activating-hint-machine">从 saMacros 客户端复制您的机器码</p>
             </div>
 
             <!-- PayPal 专用字段 -->
             <div class="input-group" id="paypalGroup" style="display: none;">
-                <label for="paypalOrderId">PayPal Order ID</label>
+                <label for="paypalOrderId" data-i18n="activating-label-paypal">PayPal Order ID</label>
                 <input 
                     type="text" 
                     id="paypalOrderId" 
                     name="paypalOrderId" 
                     placeholder="例如: 5O190127TN364715T"
+                    data-i18n-placeholder="activating-placeholder-paypal"
                     autocomplete="off"
                 />
-                <p class="hint">请输入 PayPal 订单号（用于后台核验金额）</p>
+                <p class="hint" data-i18n="activating-hint-paypal">请输入 PayPal 订单号（用于后台核验金额）</p>
             </div>
 
             <!-- 其他平台专用字段 -->
             <div class="input-group" id="otherGroup" style="display: none;">
-                <label for="otherOrderId">Payment Order ID</label>
+                <label for="otherOrderId" data-i18n="activating-label-other">支付订单号</label>
                 <input 
                     type="text" 
                     id="otherOrderId" 
                     name="otherOrderId" 
                     placeholder="例如: ORD-20260218-ABCD1234"
+                    data-i18n-placeholder="activating-placeholder-other"
                     autocomplete="off"
                 />
-                <p class="hint">请输入您从发卡平台收到的订单号</p>
+                <p class="hint" data-i18n="activating-hint-other">请输入您从发卡平台收到的订单号</p>
             </div>
 
-            <button type="submit" id="submitBtn">
-                Generate Activation Key
-            </button>
+            <button type="submit" id="submitBtn" data-i18n="activating-submit-btn">生成激活码</button>
         </form>
 
         <div id="alertBox"></div>
 
         <div class="result-area" id="resultArea">
-            <label>Your Activation Key:</label>
+            <label data-i18n="activating-result-label">您的激活码：</label>
             <textarea id="activationKey" readonly></textarea>
-            <button class="copy-btn" id="copyBtn">📋 Copy to Clipboard</button>
+            <button class="copy-btn" id="copyBtn" data-i18n="activating-copy-btn">📋 复制到剪贴板</button>
         </div>
     </div>
 
     <script>
+        const langToggle = document.getElementById('langToggle');
+        const LANG_KEY = 'saMacros-lang';
+        let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+        let translations = {};
+
+        function setSelectButtonText(button, text) {
+            button.innerHTML = '';
+            button.textContent = text;
+            button.style.display = 'flex';
+            button.style.justifyContent = 'space-between';
+            button.style.alignItems = 'center';
+            const arrowSpan = document.createElement('span');
+            arrowSpan.textContent = '▼';
+            arrowSpan.style.marginLeft = 'auto';
+            arrowSpan.style.fontSize = '12px';
+            arrowSpan.style.color = 'var(--muted)';
+            arrowSpan.style.flexShrink = '0';
+            button.appendChild(arrowSpan);
+        }
+
+        function t(key, fallback) {
+            if (translations[currentLang] && translations[currentLang][key]) {
+                return translations[currentLang][key];
+            }
+            return fallback || key;
+        }
+
+        function formatMessage(template, params) {
+            return template.replace(/\{(\w+)\}/g, (_, key) => {
+                return params[key] !== undefined ? params[key] : `{${key}}`;
+            });
+        }
+
+        async function loadTranslations() {
+            try {
+                const zhResponse = await fetch('langs/zh_cn.json');
+                const enResponse = await fetch('langs/en_us.json');
+
+                const zhData = await zhResponse.json();
+                const enData = await enResponse.json();
+
+                translations = {
+                    zh: zhData.activating || {},
+                    en: enData.activating || {}
+                };
+
+                return true;
+            } catch (error) {
+                console.error('Failed to load translations:', error);
+                return false;
+            }
+        }
+
+        function updateLanguageDisplay() {
+            if (langToggle) {
+                langToggle.textContent = currentLang === 'zh' ? 'EN' : '中';
+                langToggle.title = currentLang === 'zh' ? 'Switch to English' : '切换为中文';
+            }
+
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+            const bundle = translations[currentLang] || {};
+            if (bundle['activating-title']) {
+                document.title = bundle['activating-title'];
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (bundle[key]) {
+                    el.textContent = bundle[key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (bundle[key]) {
+                    el.setAttribute('placeholder', bundle[key]);
+                }
+            });
+
+            document.querySelectorAll('.custom-select').forEach((customSelect) => {
+                const button = customSelect.querySelector('.select-button');
+                const nativeSelect = customSelect.querySelector('select');
+                if (!button || !nativeSelect) {
+                    return;
+                }
+                const selectedOption = nativeSelect.querySelector(`option[value="${nativeSelect.value}"]`) || nativeSelect.options[0];
+                if (selectedOption) {
+                    setSelectButtonText(button, selectedOption.textContent.trim());
+                }
+            });
+        }
+
+        async function initLanguage() {
+            const loaded = await loadTranslations();
+            if (!loaded) {
+                console.warn('Could not load translations from files, using inline fallback');
+            }
+            currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+            updateLanguageDisplay();
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem(LANG_KEY, lang);
+            updateLanguageDisplay();
+        }
+
+        if (langToggle) {
+            langToggle.addEventListener('click', () => {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                setLanguage(newLang);
+            });
+        }
+
         // 自定义下拉菜单处理
         function initCustomSelect() {
             const customSelects = document.querySelectorAll('.custom-select');
@@ -425,23 +568,11 @@
                 const options = customSelect.querySelectorAll('.select-option');
                 const nativeSelect = customSelect.querySelector('select');
                 
-                // 初始化按钮：添加箭头
-                function updateButtonDisplay(text) {
-                    button.textContent = text;
-                    button.style.display = 'flex';
-                    button.style.justifyContent = 'space-between';
-                    button.style.alignItems = 'center';
-                    const arrowSpan = document.createElement('span');
-                    arrowSpan.textContent = '▼';
-                    arrowSpan.style.marginLeft = 'auto';
-                    arrowSpan.style.fontSize = '12px';
-                    arrowSpan.style.color = 'var(--muted)';
-                    arrowSpan.style.flexShrink = '0';
-                    button.appendChild(arrowSpan);
-                }
-                
                 // 初始化
-                updateButtonDisplay(button.textContent);
+                const initialOption = nativeSelect.querySelector(`option[value="${nativeSelect.value}"]`) || nativeSelect.options[0];
+                if (initialOption) {
+                    setSelectButtonText(button, initialOption.textContent.trim());
+                }
                 
                 // 打开/关闭下拉菜单
                 button.addEventListener('click', (e) => {
@@ -458,8 +589,7 @@
                         const text = option.textContent;
                         
                         // 清空按钮并重新更新显示
-                        button.innerHTML = '';
-                        updateButtonDisplay(text);
+                        setSelectButtonText(button, text);
                         
                         // 更新选中状态
                         options.forEach(opt => opt.classList.remove('selected'));
@@ -544,19 +674,19 @@
             const platform = platformSelect.value;
 
             if (!platform) {
-                showAlert('请选择购买平台');
+                showAlert(t('activating-alert-platform-required', '请选择购买平台'));
                 return false;
             }
 
             if (!machineCode) {
-                showAlert('请填写机器码');
+                showAlert(t('activating-alert-machine-required', '请填写机器码'));
                 return false;
             }
 
             // 验证 HWID 格式 (SAM-XXXX 规则)
             const hwidPattern = /^SAM-[A-Z0-9]{12,}$/i;
             if (!hwidPattern.test(machineCode)) {
-                showAlert('机器码格式无效,应为 SAM-XXXXXXXXXXXX 格式');
+                showAlert(t('activating-alert-machine-invalid', '机器码格式无效，应为 SAM-XXXXXXXXXXXX 格式'));
                 return false;
             }
 
@@ -564,7 +694,7 @@
             if (platform === 'paypal') {
                 const paypalOrderId = paypalOrderIdInput.value.trim();
                 if (!paypalOrderId) {
-                    showAlert('请填写 PayPal Order ID');
+                    showAlert(t('activating-alert-paypal-required', '请填写 PayPal Order ID'));
                     return false;
                 }
             }
@@ -573,7 +703,7 @@
             if (platform === 'other') {
                 const otherOrderId = otherOrderIdInput.value.trim();
                 if (!otherOrderId) {
-                    showAlert('请填写 Payment Order ID');
+                    showAlert(t('activating-alert-other-required', '请填写支付订单号'));
                     return false;
                 }
             }
@@ -591,7 +721,7 @@
 
             // 禁用按钮并显示加载状态
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span>Generating...';
+            submitBtn.innerHTML = `<span class="spinner"></span>${t('activating-submit-loading', 'Generating...')}`;
             resultArea.classList.remove('show');
             alertBox.innerHTML = '';
 
@@ -621,19 +751,22 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || `HTTP ${response.status}: 请求失败`);
+                    const fallback = formatMessage(t('activating-alert-request-failed', 'HTTP {status}: 请求失败'), {
+                        status: response.status
+                    });
+                    throw new Error(data.error || fallback);
                 }
 
                 // 显示激活码
                 activationKeyInput.value = data.activation_key;
                 resultArea.classList.add('show');
-                showAlert('✅ 激活码生成成功！请妥善保存。', 'success');
+                showAlert(t('activating-alert-success', '✅ 激活码生成成功！请妥善保存。'), 'success');
 
             } catch (error) {
                 showAlert(`❌ ${error.message}`);
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Generate Activation Key';
+                submitBtn.innerHTML = t('activating-submit-btn', 'Generate Activation Key');
             }
         });
 
@@ -641,19 +774,23 @@
         copyBtn.addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(activationKeyInput.value);
-                copyBtn.innerHTML = '✅ Copied!';
+                copyBtn.innerHTML = t('activating-copy-success', '✅ Copied!');
                 setTimeout(() => {
-                    copyBtn.innerHTML = '📋 Copy to Clipboard';
+                    copyBtn.innerHTML = t('activating-copy-btn', '📋 Copy to Clipboard');
                 }, 2000);
             } catch (error) {
                 // 降级方案
                 activationKeyInput.select();
                 document.execCommand('copy');
-                copyBtn.innerHTML = '✅ Copied!';
+                copyBtn.innerHTML = t('activating-copy-success', '✅ Copied!');
                 setTimeout(() => {
-                    copyBtn.innerHTML = '📋 Copy to Clipboard';
+                    copyBtn.innerHTML = t('activating-copy-btn', '📋 Copy to Clipboard');
                 }, 2000);
             }
+        });
+
+        initLanguage().catch((error) => {
+            console.error('Error initializing language:', error);
         });
     </script>
 </body>

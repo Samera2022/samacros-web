@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saMacros API 文档 - 完整参考指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --bg-color: #ffffff;
+            --border-color: #e5e7eb;
+            --code-bg: #f3f4f6;
+            --hover-color: #f0f9ff;
+            --sidebar-width: 280px;
+            --header-height: 70px;
+        }
+
+        html.dark-mode {
+            --text-color: #e5e7eb;
+            --bg-color: #1f2937;
+            --border-color: #374151;
+            --code-bg: #111827;
+            --hover-color: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            height: var(--header-height);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            color: white;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            height: calc(100vh - var(--header-height));
+        }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--hover-color);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            letter-spacing: 0.05em;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            display: block;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .nav-item:hover {
+            background: var(--border-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background: var(--border-color);
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        /* Code Block */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            color: var(--primary-color);
+        }
+
+        pre code {
+            color: inherit;
+        }
+
+        /* API Card */
+        .api-card {
+            background: var(--hover-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .api-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .api-method {
+            font-family: 'Courier New', monospace;
+            background: var(--code-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .api-status {
+            display: inline-block;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-implemented {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        html.dark-mode .status-implemented {
+            background: #164e63;
+            color: #86efac;
+        }
+
+        .status-planned {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        html.dark-mode .status-planned {
+            background: #78350f;
+            color: #fbbf24;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        table th {
+            background: var(--hover-color);
+            padding: 0.75rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        table tr:hover {
+            background: var(--hover-color);
+        }
+
+        /* Event Tree */
+        .event-tree {
+            font-family: 'Courier New', monospace;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .event-tree-item {
+            padding: 0.25rem 0;
+            white-space: pre;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Utilities */
+        .note {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(30, 64, 175, 0.05));
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        html.dark-mode .note {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(30, 64, 175, 0.1));
+        }
+
+        .warning {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.1), rgba(202, 138, 4, 0.05));
+            border-left: 4px solid #fbbf24;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        html.dark-mode .warning {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(202, 138, 4, 0.1));
+        }
+
+        .success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(21, 128, 61, 0.05));
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        html.dark-mode .success {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(21, 128, 61, 0.1));
+        }
+
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+        }
+
+        .breadcrumb span {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .breadcrumb span:hover {
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 220px;
+            }
+
+            main {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            aside {
+                width: 100%;
+                max-height: 50vh;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+
+            header {
+                flex-wrap: wrap;
+                padding: 0.75rem 1rem;
+                gap: 1rem;
+            }
+
+            .header-left, .header-right {
+                width: 100%;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--hover-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        pre:hover .copy-btn {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <a href="#" class="logo">📘 saMacros API</a>
+            <span style="font-size: 0.9rem;">v2.0.0+</span>
+        </div>
+        <div class="header-right">
+            <input type="text" class="search-box" id="searchBox" placeholder="搜索 API...">
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside>
+            <div class="nav-section">
+                <div class="nav-section-title">基础</div>
+                <a class="nav-item active" onclick="switchSection('overview')">概览</a>
+                <a class="nav-item" onclick="switchSection('quick-ref')">快速参考</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">核心 API</div>
+                <a class="nav-item" onclick="switchSection('script-api')">Script API (mm)</a>
+                <a class="nav-item" onclick="switchSection('context-api')">Context API</a>
+                <a class="nav-item" onclick="switchSection('config-api')">Configuration API</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">扩展 API</div>
+                <a class="nav-item" onclick="switchSection('system-api')">System API</a>
+                <a class="nav-item" onclick="switchSection('i18n-api')">I18n API</a>
+                <a class="nav-item" onclick="switchSection('macro-api')">Macro API</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">事件系统</div>
+                <a class="nav-item" onclick="switchSection('lifecycle-events')">生命周期事件</a>
+                <a class="nav-item" onclick="switchSection('recording-events')">录制事件</a>
+                <a class="nav-item" onclick="switchSection('playback-events')">回放事件</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">高级主题</div>
+                <a class="nav-item" onclick="switchSection('future-apis')">计划中的 API</a>
+                <a class="nav-item" onclick="switchSection('patterns')">常用模式</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">参考</div>
+                <a class="nav-item" onclick="switchSection('troubleshooting')">故障排除</a>
+                <a class="nav-item" onclick="switchSection('metadata')">元数据模板</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="mainContent">
+            <!-- Overview Section -->
+            <section id="overview" class="active">
+                <h1>🚀 saMacros API 文档</h1>
+                <p class="subtitle">完整的脚本编程参考指南</p>
+
+                <div class="note">
+                    <strong>📌 当前版本：</strong> saMacros v2.0.0+ 兼容
+                </div>
+
+                <h2>欢迎</h2>
+                <p>saMacros 提供了强大的脚本 API，允许开发者创建复杂的自动化脚本。本文档涵盖了所有可用的 API 接口、事件系统和最佳实践。</p>
+
+                <h2>核心特性</h2>
+                <ul style="margin: 1rem 0 1rem 1.5rem;">
+                    <li><strong>Event System</strong> - 完整的事件系统，监听应用生命周期和用户操作</li>
+                    <li><strong>Context API</strong> - 访问系统信息、配置和屏幕数据</li>
+                    <li><strong>Macro Control</strong> - 完整的宏操作控制</li>
+                    <li><strong>I18n Support</strong> - 多语言国际化支持</li>
+                    <li><strong>System Integration</strong> - 深度系统集成能力</li>
+                </ul>
+
+                <h2>快速开始</h2>
+                <pre><code>// 脚本元数据
+const registry_name = 'my_script';
+const display_name = 'My Script';
+const version = '1.0.0';
+const author = 'Your Name';
+const description = 'What this script does';
+
+// 监听事件
+mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        mm.log('Playback starting with ' + event.getRepeatCount() + ' repeats');
+    });</code></pre>
+
+                <h2>文档结构</h2>
+                <p>本文档分为以下几个部分：</p>
+                <table>
+                    <tr>
+                        <th>部分</th>
+                        <th>描述</th>
+                    </tr>
+                    <tr>
+                        <td><strong>快速参考</strong></td>
+                        <td>最常用 API 的速查表</td>
+                    </tr>
+                    <tr>
+                        <td><strong>核心 API</strong></td>
+                        <td>基础的 mm 对象和 Context 接口</td>
+                    </tr>
+                    <tr>
+                        <td><strong>扩展 API</strong></td>
+                        <td>System、I18n、Macro 等高级接口</td>
+                    </tr>
+                    <tr>
+                        <td><strong>事件系统</strong></td>
+                        <td>完整的可监听事件列表和用法</td>
+                    </tr>
+                    <tr>
+                        <td><strong>高级主题</strong></td>
+                        <td>常见模式和计划 API</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Quick Reference Section -->
+            <section id="quick-ref">
+                <h1>⚡ 快速参考</h1>
+                <p class="subtitle">最常用 API 一览表</p>
+
+                <h2>Script API (mm object)</h2>
+                <pre><code>// 事件监听
+mm.on(eventClassName, callback)
+
+// 获取上下文
+const context = mm.getContext()
+
+// 日志输出
+mm.log(message)
+
+// 资源清理
+mm.cleanup()</code></pre>
+
+                <h2>Context API</h2>
+                <pre><code>const context = mm.getContext()
+
+// 模拟操作
+context.simulate(action)
+
+// 获取像素颜色
+const color = context.getPixelColor(x, y)
+
+// 显示通知
+context.showToast(title, message)
+
+// 获取配置
+const config = context.getAppConfig()</code></pre>
+
+                <h2>Configuration API</h2>
+                <pre><code>const config = mm.getContext().getAppConfig()
+
+config.getBoolean(key)    // 读取布尔值
+config.getInt(key)        // 读取整数
+config.getDouble(key)     // 读取浮点数
+config.getString(key)     // 读取字符串
+config.getKeyMap()        // 获取所有配置</code></pre>
+
+                <h2>System Info API</h2>
+                <pre><code>const system = mm.getContext().getSystemInfo()
+
+system.getScale()                  // DPI缩放
+system.getVirtualOrigin()          // 虚拟原点
+system.getSystemLanguage()         // 系统语言
+system.isSystemDarkMode()          // 深色模式
+system.getOSName()                 // 操作系统
+system.getJavaVersion()            // Java版本</code></pre>
+
+                <h2>Macro Info API</h2>
+                <pre><code>const macro = mm.getContext().getMacroInfo()
+
+macro.isRecording()                // 是否录制中
+macro.isPlaying()                  // 是否播放中
+macro.isPaused()                   // 是否暂停
+macro.getActionsCount()            // 操作数量</code></pre>
+
+                <h2>I18n API</h2>
+                <pre><code>const i18n = mm.getContext().getI18n()
+
+i18n.get(key)                      // 获取翻译
+i18n.hasKey(key)                   // 检查键存在
+i18n.getCurrentLanguage()          // 当前语言</code></pre>
+            </section>
+
+            <!-- Script API Section -->
+            <section id="script-api">
+                <h1>Script API (mm object)</h1>
+                <p class="subtitle">主要脚本入口对象</p>
+
+                <h2>概述</h2>
+                <p>mm 对象是所有脚本的入口点，提供了事件监听、日志输出和上下文访问等基本功能。</p>
+
+                <h2>API 方法</h2>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">mm.on(eventClassName, callback)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 注册事件监听器</p>
+                    <p><strong>参数：</strong></p>
+                    <ul style="margin: 0.5rem 0 0.5rem 1.5rem;">
+                        <li>eventClassName (string) - 事件类名</li>
+                        <li>callback (function) - 回调函数，接收event对象</li>
+                    </ul>
+                    <pre><code>mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        mm.log('Playback starting');
+    });</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">mm.getContext()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取脚本上下文对象</p>
+                    <p><strong>返回：</strong> IScriptContext - 包含系统信息和操作接口</p>
+                    <pre><code>const context = mm.getContext()
+const config = context.getAppConfig()
+const system = context.getSystemInfo()</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">mm.log(message)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 输出日志信息</p>
+                    <p><strong>参数：</strong></p>
+                    <ul style="margin: 0.5rem 0 0.5rem 1.5rem;">
+                        <li>message (string) - 日志消息</li>
+                    </ul>
+                    <pre><code>mm.log('Script started')
+mm.log('Action count: ' + count)</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">mm.cleanup()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 清理资源（脚本禁用时自动调用）</p>
+                    <p><strong>注意：</strong> 通常无需手动调用</p>
+                    <pre><code>// 自动调用，但也可以手动调用
+mm.cleanup()</code></pre>
+                </div>
+            </section>
+
+            <!-- Context API Section -->
+            <section id="context-api">
+                <h1>Context API</h1>
+                <p class="subtitle">脚本执行上下文接口</p>
+
+                <h2>概述</h2>
+                <p>Context 对象通过 mm.getContext() 获取，提供了访问系统信息、执行操作、显示通知等功能。</p>
+
+                <h2>主要方法</h2>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.simulate(action)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 模拟鼠标或键盘操作</p>
+                    <p><strong>参数：</strong></p>
+                    <ul style="margin: 0.5rem 0 0.5rem 1.5rem;">
+                        <li>action (IMouseAction) - 鼠标/键盘动作对象</li>
+                    </ul>
+                    <pre><code>const action = new MouseClickAction(100, 100, 0, 0)
+context.simulate(action)</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getPixelColor(x, y)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取屏幕上指定位置的像素颜色</p>
+                    <p><strong>参数：</strong></p>
+                    <ul style="margin: 0.5rem 0 0.5rem 1.5rem;">
+                        <li>x (int) - 像素 X 坐标</li>
+                        <li>y (int) - 像素 Y 坐标</li>
+                    </ul>
+                    <p><strong>返回：</strong> Color - 颜色对象</p>
+                    <pre><code>const color = context.getPixelColor(100, 100)
+if (color.getRed() === 255) {
+    mm.log('Pixel is red')
+}</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.showToast(title, message)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 显示系统通知</p>
+                    <p><strong>参数：</strong></p>
+                    <ul style="margin: 0.5rem 0 0.5rem 1.5rem;">
+                        <li>title (string) - 通知标题</li>
+                        <li>message (string) - 通知内容</li>
+                    </ul>
+                    <pre><code>context.showToast('Success', 'Macro completed!')
+context.showToast('Warning', 'High repeat count detected')</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getAppConfig()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取应用配置对象</p>
+                    <p><strong>返回：</strong> IConfig - 配置接口</p>
+                    <pre><code>const config = context.getAppConfig()
+const darkMode = config.getBoolean('enable_dark_mode')
+const version = config.getString('app_version')</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getSystemInfo()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取系统信息对象</p>
+                    <p><strong>返回：</strong> ISystemInfo - 系统信息接口</p>
+                    <pre><code>const system = context.getSystemInfo()
+const scale = system.getScale()
+const isDarkMode = system.isSystemDarkMode()</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getScreenInfo()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取屏幕信息</p>
+                    <p><strong>返回：</strong> IScreenInfo - 屏幕信息接口</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getMacroInfo()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取宏状态信息</p>
+                    <p><strong>返回：</strong> IMacroInfo - 宏信息接口</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getI18n()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取国际化对象</p>
+                    <p><strong>返回：</strong> II18n - 国际化接口</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">context.getMouseInfo()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取鼠标信息</p>
+                    <p><strong>返回：</strong> IMouseInfo - 鼠标信息接口</p>
+                </div>
+            </section>
+
+            <!-- Config API Section -->
+            <section id="config-api">
+                <h1>Configuration API</h1>
+                <p class="subtitle">应用配置读取接口</p>
+
+                <h2>概述</h2>
+                <p>Configuration API 允许脚本读取应用的各种配置值。</p>
+
+                <h2>获取配置对象</h2>
+                <pre><code>const config = mm.getContext().getAppConfig()</code></pre>
+
+                <h2>API 方法</h2>
+
+                <table>
+                    <tr>
+                        <th>方法</th>
+                        <th>描述</th>
+                        <th>示例</th>
+                    </tr>
+                    <tr>
+                        <td><code>getBoolean(key)</code></td>
+                        <td>读取布尔值配置</td>
+                        <td><code>config.getBoolean('enable_dark_mode')</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>getInt(key)</code></td>
+                        <td>读取整数配置</td>
+                        <td><code>config.getInt('retry_count')</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>getDouble(key)</code></td>
+                        <td>读取浮点数配置</td>
+                        <td><code>config.getDouble('scale_factor')</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>getString(key)</code></td>
+                        <td>读取字符串配置</td>
+                        <td><code>config.getString('app_version')</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>getKeyMap()</code></td>
+                        <td>获取所有配置（Map）</td>
+                        <td><code>config.getKeyMap()</code></td>
+                    </tr>
+                </table>
+
+                <h2>使用示例</h2>
+                <pre><code>const config = mm.getContext().getAppConfig()
+
+// 读取各种配置
+const darkMode = config.getBoolean('enable_dark_mode')
+const retryCount = config.getInt('retry_count')
+const delayFactor = config.getDouble('delay_factor')
+const version = config.getString('app_version')
+
+// 使用所有配置
+const allConfig = config.getKeyMap()
+for (var key in allConfig) {
+    mm.log(key + '=' + allConfig[key])
+}</code></pre>
+            </section>
+
+            <!-- System API Section -->
+            <section id="system-api">
+                <h1>System & Screen API</h1>
+                <p class="subtitle">系统信息和屏幕坐标接口</p>
+
+                <h2>System Info API</h2>
+                <p>获取系统相关信息。</p>
+                <pre><code>const system = mm.getContext().getSystemInfo()</code></pre>
+
+                <h2>方法列表</h2>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.getScale()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取 DPI 缩放因子</p>
+                    <p><strong>返回：</strong> [scaleX, scaleY] - 浮点数数组</p>
+                    <pre><code>const scale = system.getScale()
+mm.log('Scale X: ' + scale[0])
+mm.log('Scale Y: ' + scale[1])</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.getVirtualOrigin()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取虚拟屏幕原点（多显示器）</p>
+                    <p><strong>返回：</strong> {x, y} - 坐标对象</p>
+                    <pre><code>const origin = system.getVirtualOrigin()
+mm.log('Virtual origin: (' + origin.x + ', ' + origin.y + ')')</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.normalizeToVirtualOrigin(x, y)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 坐标归一化</p>
+                    <p><strong>参数：</strong> x, y - 物理坐标</p>
+                    <p><strong>返回：</strong> {x, y} - 虚拟坐标</p>
+                    <pre><code>const vpos = system.normalizeToVirtualOrigin(1920, 1080)
+mm.log('Virtual pos: (' + vpos.x + ', ' + vpos.y + ')')</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.denormalizeFromVirtualOrigin(x, y)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 坐标反归一化</p>
+                    <p><strong>参数：</strong> x, y - 虚拟坐标</p>
+                    <p><strong>返回：</strong> {x, y} - 物理坐标</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.getSystemLanguage()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取系统语言代码</p>
+                    <p><strong>返回：</strong> string - 如 "en_us", "zh_cn"</p>
+                    <pre><code>const lang = system.getSystemLanguage()
+mm.log('System language: ' + lang)</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.isSystemDarkMode()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 检查系统是否为深色模式</p>
+                    <p><strong>返回：</strong> boolean</p>
+                    <pre><code>if (system.isSystemDarkMode()) {
+    mm.log('System is in dark mode')
+}</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.getOSName()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取操作系统名称</p>
+                    <p><strong>返回：</strong> string - 如 "Windows 10", "macOS"</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">system.getJavaVersion()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取 Java 版本</p>
+                    <p><strong>返回：</strong> string - 如 "11.0.1"</p>
+                </div>
+            </section>
+
+            <!-- I18n API Section -->
+            <section id="i18n-api">
+                <h1>Internationalization API</h1>
+                <p class="subtitle">多语言国际化接口</p>
+
+                <h2>概述</h2>
+                <p>I18n API 允许脚本获取已本地化的字符串，支持多种语言。</p>
+
+                <h2>获取 I18n 对象</h2>
+                <pre><code>const i18n = mm.getContext().getI18n()</code></pre>
+
+                <h2>API 方法</h2>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">i18n.get(key)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取翻译字符串</p>
+                    <p><strong>参数：</strong> key (string) - 翻译键</p>
+                    <p><strong>返回：</strong> string - 翻译后的文本</p>
+                    <pre><code>const startText = i18n.get('main_frame.start_recording')
+mm.log('Start button: ' + startText)</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">i18n.hasKey(key)</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 检查翻译键是否存在</p>
+                    <p><strong>参数：</strong> key (string) - 翻译键</p>
+                    <p><strong>返回：</strong> boolean</p>
+                    <pre><code>if (i18n.hasKey('custom_key')) {
+    mm.log(i18n.get('custom_key'))
+}</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">i18n.getCurrentLanguage()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取当前语言代码</p>
+                    <p><strong>返回：</strong> string - 如 "en_us", "zh_cn"</p>
+                    <pre><code>const lang = i18n.getCurrentLanguage()
+mm.log('Current language: ' + lang)</code></pre>
+                </div>
+
+                <h2>使用示例</h2>
+                <pre><code>const i18n = mm.getContext().getI18n()
+
+// 获取当前语言
+const currentLang = i18n.getCurrentLanguage()
+mm.log('Language: ' + currentLang)
+
+// 根据语言显示不同的消息
+if (currentLang.startsWith('zh')) {
+    mm.log('欢迎使用 saMacros 脚本系统')
+} else if (currentLang.startsWith('en')) {
+    mm.log('Welcome to saMacros scripting system')
+}</code></pre>
+            </section>
+
+            <!-- Macro API Section -->
+            <section id="macro-api">
+                <h1>Macro Management API</h1>
+                <p class="subtitle">宏操作和状态管理</p>
+
+                <h2>概述</h2>
+                <p>Macro API 提供对当前宏的访问和控制能力。</p>
+
+                <h2>获取 Macro Info 对象</h2>
+                <pre><code>const macro = mm.getContext().getMacroInfo()</code></pre>
+
+                <h2>状态查询方法</h2>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">macro.isRecording()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 检查是否正在录制</p>
+                    <p><strong>返回：</strong> boolean</p>
+                    <pre><code>if (macro.isRecording()) {
+    mm.log('Currently recording')
+}</code></pre>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">macro.isPlaying()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 检查是否正在回放</p>
+                    <p><strong>返回：</strong> boolean</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">macro.isPaused()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 检查是否暂停中</p>
+                    <p><strong>返回：</strong> boolean</p>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-card-header">
+                        <span class="api-method">macro.getActionsCount()</span>
+                        <span class="api-status status-implemented">✓ 已实现</span>
+                    </div>
+                    <p><strong>描述：</strong> 获取操作数量</p>
+                    <p><strong>返回：</strong> int</p>
+                    <pre><code>const count = macro.getActionsCount()
+mm.log('Total actions: ' + count)</code></pre>
+                </div>
+
+                <h2>使用示例</h2>
+                <pre><code>const macro = mm.getContext().getMacroInfo()
+
+// 检查宏状态
+if (macro.isRecording()) {
+    mm.log('Recording in progress...')
+} else if (macro.isPlaying()) {
+    mm.log('Playback in progress...')
+} else if (macro.isPaused()) {
+    mm.log('Playback paused')
+} else {
+    mm.log('Macro is idle')
+}</code></pre>
+            </section>
+
+            <!-- Lifecycle Events Section -->
+            <section id="lifecycle-events">
+                <h1>Lifecycle Events</h1>
+                <p class="subtitle">应用生命周期事件</p>
+
+                <h2>OnAppLaunchedEvent</h2>
+                <p>应用启动时触发。</p>
+                <pre><code>mm.on('io.github.samera2022.samacros.api.event.events.OnAppLaunchedEvent', 
+    (event) => {
+        mm.log('App version: ' + event.getApplicationVersion())
+        mm.log('Java version: ' + event.getJavaVersion())
+    })</code></pre>
+
+                <h2>事件结构</h2>
+                <div class="event-tree"><pre><code>OnAppLaunchedEvent
+├─ getApplicationVersion()
+└─ getJavaVersion()</code></pre></div>
+            </section>
+
+            <!-- Recording Events Section -->
+            <section id="recording-events">
+                <h1>Recording Events</h1>
+                <p class="subtitle">录制过程中的事件</p>
+
+                <h2>BeforeRecordStartEvent (Cancellable)</h2>
+                <p>开始录制前触发。</p>
+                <div class="event-tree"><pre><code>BeforeRecordStartEvent
+├─ getStartTime()
+└─ getInitialMousePos()</code></pre></div>
+
+                <h2>AfterRecordStopEvent</h2>
+                <p>停止录制后触发。</p>
+                <div class="event-tree"><pre><code>AfterRecordStopEvent
+└─ getActionsCount()</code></pre></div>
+
+                <h2>OnInputCapturedEvent (Cancellable)</h2>
+                <p>捕获到输入操作时触发。</p>
+                <div class="event-tree"><pre><code>OnInputCapturedEvent
+├─ getInputType()      // 1=Press, 2=Release, 3=Wheel, 10=KeyPress, 11=KeyRelease
+├─ getKeyCode()
+├─ getX(), getY()
+└─ getDelay()</code></pre></div>
+
+                <h2>使用示例</h2>
+                <pre><code>// 监听开始录制
+mm.on('io.github.samera2022.samacros.api.event.events.BeforeRecordStartEvent', 
+    (event) => {
+        mm.log('Recording starts')
+    })
+
+// 监听停止录制
+mm.on('io.github.samera2022.samacros.api.event.events.AfterRecordStopEvent', 
+    (event) => {
+        mm.log('Recorded ' + event.getActionsCount() + ' actions')
+    })</code></pre>
+            </section>
+
+            <!-- Playback Events Section -->
+            <section id="playback-events">
+                <h1>Playback Events</h1>
+                <p class="subtitle">回放过程中的事件</p>
+
+                <h2>BeforePlaybackStartEvent (Cancellable)</h2>
+                <p>回放开始前触发。</p>
+                <pre><code>mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        mm.log('About to play with ' + event.getRepeatCount() + ' repeats')
+        // 可以通过 event.setCancelled(true) 取消回放
+    })</code></pre>
+
+                <h2>BeforeStepExecuteEvent (Cancellable)</h2>
+                <p>执行每个步骤前触发。</p>
+                <pre><code>var stepCounter = 0
+mm.on('io.github.samera2022.samacros.api.event.events.BeforeStepExecuteEvent', 
+    (event) => {
+        stepCounter++
+        if (stepCounter % 10 === 0) {
+            mm.log('Executing step ' + event.getActionIndex())
+        }
+    })</code></pre>
+
+                <h2>AfterStepExecuteEvent</h2>
+                <p>执行每个步骤后触发。</p>
+
+                <h2>OnLoopCompleteEvent</h2>
+                <p>完成一个循环时触发。</p>
+                <pre><code>mm.on('io.github.samera2022.samacros.api.event.events.OnLoopCompleteEvent', 
+    (event) => {
+        mm.log('Loop ' + event.getLoopNumber() + ' of ' + event.getTotalLoops() + ' completed')
+    })</code></pre>
+
+                <h2>OnPlaybackAbortedEvent</h2>
+                <p>回放中止时触发。</p>
+
+                <h2>事件树</h2>
+                <div class="event-tree"><pre><code>Playback Events
+├─ BeforePlaybackStartEvent (Cancellable)
+├─ BeforeStepExecuteEvent (Cancellable)
+├─ AfterStepExecuteEvent
+├─ OnLoopCompleteEvent
+└─ OnPlaybackAbortedEvent</code></pre></div>
+            </section>
+
+            <!-- Future APIs Section -->
+            <section id="future-apis">
+                <h1>计划中的 API</h1>
+                <p class="subtitle">下一个版本计划推出的功能</p>
+
+                <h2>Priority 1: Macro Management (v2.1.0)</h2>
+                <p>计划在 v2.1.0 推出。</p>
+                <pre><code>// mm.macro object
+mm.macro.getActions()            // 获取操作列表
+mm.macro.getCurrentLoop()        // 当前循环号
+mm.macro.getCurrentActionIndex() // 当前操作索引
+mm.macro.play()                  // 播放
+mm.macro.pause()                 // 暂停
+mm.macro.resume()                // 恢复
+mm.macro.abort()                 // 中止
+mm.macro.clear()                 // 清空
+mm.macro.startRecording()        // 开始录制
+mm.macro.stopRecording()         // 停止录制</code></pre>
+
+                <h2>Priority 2: Clipboard API (v2.2.0)</h2>
+                <pre><code>mm.clipboard.getText()           // 获取文本
+mm.clipboard.setText(text)       // 设置文本
+mm.clipboard.getFiles()          // 获取文件列表
+mm.clipboard.setFiles(files)     // 设置文件列表</code></pre>
+
+                <h2>Priority 2: File API (v2.2.0)</h2>
+                <pre><code>mm.file.readText(path)           // 读取文本文件
+mm.file.writeText(path, content) // 写入文本文件
+mm.file.exists(path)             // 检查文件存在
+mm.file.listDirectory(path)      // 列出目录
+mm.file.createDirectory(path)    // 创建目录
+mm.file.delete(path)             // 删除文件</code></pre>
+
+                <h2>Priority 3: Network API (v2.3.0+)</h2>
+                <pre><code>mm.http.get(url)                 // GET 请求
+mm.http.post(url, data)          // POST 请求
+mm.http.put(url, data)           // PUT 请求
+mm.http.delete(url)              // DELETE 请求
+mm.http.download(url, path)      // 下载文件</code></pre>
+
+                <h2>Priority 3: Window API (v2.3.0+)</h2>
+                <pre><code>mm.window.getActiveWindow()      // 获取活跃窗口
+mm.window.getAllWindows()        // 获取所有窗口
+mm.window.focusWindow(title)     // 焦点某个窗口
+mm.window.getWindowByTitle(title) // 通过标题获取
+mm.window.getWindowByClass(className) // 通过类名获取</code></pre>
+
+                <h2>Implementation Roadmap</h2>
+                <table>
+                    <tr>
+                        <th>API 组</th>
+                        <th>优先级</th>
+                        <th>目标版本</th>
+                        <th>状态</th>
+                    </tr>
+                    <tr>
+                        <td>mm.macro.*</td>
+                        <td>高</td>
+                        <td>2.1.0</td>
+                        <td>计划中</td>
+                    </tr>
+                    <tr>
+                        <td>mm.clipboard.*</td>
+                        <td>中</td>
+                        <td>2.1.0</td>
+                        <td>计划中</td>
+                    </tr>
+                    <tr>
+                        <td>mm.file.*</td>
+                        <td>中</td>
+                        <td>2.2.0</td>
+                        <td>计划中</td>
+                    </tr>
+                    <tr>
+                        <td>mm.http.*</td>
+                        <td>低</td>
+                        <td>2.3.0</td>
+                        <td>研究中</td>
+                    </tr>
+                    <tr>
+                        <td>mm.window.*</td>
+                        <td>低</td>
+                        <td>2.3.0</td>
+                        <td>研究中</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Common Patterns Section -->
+            <section id="patterns">
+                <h1>常用模式</h1>
+                <p class="subtitle">常见的脚本编程模式</p>
+
+                <h2>Pattern 1: 事件监控</h2>
+                <pre><code>// 监听回放开始事件
+mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        mm.log('Playback starting with ' + event.getRepeatCount() + ' repeats')
+    })</code></pre>
+
+                <h2>Pattern 2: 状态检查</h2>
+                <pre><code>const macro = mm.getContext().getMacroInfo()
+
+if (macro.isPlaying()) {
+    mm.log('Macro is playing')
+} else if (macro.isRecording()) {
+    mm.log('Macro is recording')
+} else {
+    mm.log('Macro is idle')
+}</code></pre>
+
+                <h2>Pattern 3: 条件执行</h2>
+                <pre><code>mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        if (event.getRepeatCount() > 100) {
+            mm.log('Warning: High repeat count')
+            event.setCancelled(true)  // 取消回放
+        }
+    })</code></pre>
+
+                <h2>Pattern 4: 错误处理</h2>
+                <pre><code>try {
+    const scale = mm.getContext().getSystemInfo().getScale()
+    if (scale[0] < 1.0) {
+        mm.log('Warning: Scale is less than 1.0')
+    }
+} catch (error) {
+    mm.log('Error: ' + error.message)
+}</code></pre>
+
+                <h2>Pattern 5: 功能检测</h2>
+                <pre><code>if (typeof mm.macro !== 'undefined') {
+    // 使用 mm.macro API
+    const count = mm.macro.getActionsCount()
+} else {
+    // 回退到事件型方法
+    mm.log('mm.macro API not available')
+}</code></pre>
+
+                <h2>Pattern 6: 配置缓存</h2>
+                <pre><code>// ❌ 不好 - 每次都查询
+mm.on('io.github.samera2022.samacros.api.event.events.BeforeStepExecuteEvent', 
+    (e) => {
+        var quick = mm.getContext().getAppConfig().getBoolean('enable_quick_mode')
+    })
+
+// ✅ 好 - 缓存一次
+var config = mm.getContext().getAppConfig()
+var quick = config.getBoolean('enable_quick_mode')
+mm.on('io.github.samera2022.samacros.api.event.events.BeforeStepExecuteEvent', 
+    (e) => {
+        // 使用缓存的配置
+    })</code></pre>
+            </section>
+
+            <!-- Troubleshooting Section -->
+            <section id="troubleshooting">
+                <h1>故障排除</h1>
+                <p class="subtitle">常见问题和解决方案</p>
+
+                <h2>脚本加载问题</h2>
+                <table>
+                    <tr>
+                        <th>问题</th>
+                        <th>原因</th>
+                        <th>解决方案</th>
+                    </tr>
+                    <tr>
+                        <td>脚本不加载</td>
+                        <td>文件格式错误或元数据不完整</td>
+                        <td>检查元数据格式，确保所有必需字段存在</td>
+                    </tr>
+                    <tr>
+                        <td>脚本加载缓慢</td>
+                        <td>脚本过大或有阻塞操作</td>
+                        <td>优化脚本大小，避免在初始化时进行昂贵操作</td>
+                    </tr>
+                </table>
+
+                <h2>事件问题</h2>
+                <table>
+                    <tr>
+                        <th>问题</th>
+                        <th>原因</th>
+                        <th>解决方案</th>
+                    </tr>
+                    <tr>
+                        <td>事件不触发</td>
+                        <td>事件类名错误或脚本未启用</td>
+                        <td>验证事件类名，确保脚本在应用设置中启用</td>
+                    </tr>
+                    <tr>
+                        <td>回调执行错误</td>
+                        <td>回调中有异常</td>
+                        <td>使用 try-catch 包装回调，添加日志输出</td>
+                    </tr>
+                </table>
+
+                <h2>获取值问题</h2>
+                <table>
+                    <tr>
+                        <th>问题</th>
+                        <th>原因</th>
+                        <th>解决方案</th>
+                    </tr>
+                    <tr>
+                        <td>获取 null</td>
+                        <td>调用时机不对或对象不存在</td>
+                        <td>使用 try-catch，检查值是否为 null</td>
+                    </tr>
+                    <tr>
+                        <td>类型转换错误</td>
+                        <td>获取的值类型与预期不同</td>
+                        <td>使用正确的 get 方法（getInt vs getString 等）</td>
+                    </tr>
+                </table>
+
+                <h2>权限和访问问题</h2>
+                <table>
+                    <tr>
+                        <th>问题</th>
+                        <th>原因</th>
+                        <th>解决方案</th>
+                    </tr>
+                    <tr>
+                        <td>权限被拒绝</td>
+                        <td>requires_native_access 未设置或白名单未配置</td>
+                        <td>设置正确的元数据，确保脚本在白名单中</td>
+                    </tr>
+                </table>
+
+                <h2>性能问题</h2>
+                <table>
+                    <tr>
+                        <th>问题</th>
+                        <th>原因</th>
+                        <th>解决方案</th>
+                    </tr>
+                    <tr>
+                        <td>应用响应缓慢</td>
+                        <td>脚本日志过多或事件处理器太重</td>
+                        <td>减少日志输出，优化事件处理器</td>
+                    </tr>
+                    <tr>
+                        <td>内存占用增加</td>
+                        <td>未清理资源或内存泄漏</td>
+                        <td>确保在 cleanup() 中释放资源</td>
+                    </tr>
+                </table>
+
+                <h2>调试技巧</h2>
+                <div class="note">
+                    <strong>💡 调试建议：</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>使用 mm.log() 输出调试信息</li>
+                        <li>在关键位置添加日志</li>
+                        <li>使用条件日志减少输出</li>
+                        <li>检查脚本是否启用</li>
+                        <li>验证事件类名的完整路径</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Metadata Template Section -->
+            <section id="metadata">
+                <h1>脚本元数据模板</h1>
+                <p class="subtitle">创建新脚本的必需配置</p>
+
+                <h2>必需字段</h2>
+                <pre><code>// 脚本注册名称（唯一）
+const registry_name = 'my_script';
+
+// 显示名称
+const display_name = 'My Script Name';
+
+// 版本号
+const version = '1.0.0';
+
+// 作者名字
+const author = 'Your Name';
+
+// 脚本描述
+const description = 'What this script does';
+
+// 可用版本（最低要求）
+const available_version = '1.0.0';</code></pre>
+
+                <h2>可选字段</h2>
+                <pre><code>// 可选依赖（脚本列表）
+const soft_dependencies = ['optional_script'];
+
+// 必需依赖（脚本列表）
+const hard_dependencies = ['required_script'];
+
+// 是否需要本地访问权限
+const requires_native_access = false;
+
+// 需要本地访问的原因说明
+const native_access_description = 'Why it needs access';</code></pre>
+
+                <h2>完整模板</h2>
+                <pre><code>// ==================== 脚本元数据 ====================
+
+// 必需：脚本唯一标识
+const registry_name = 'demo_automation';
+
+// 必需：显示名称（会在 UI 中显示）
+const display_name = 'Demo Automation Script';
+
+// 必需：版本号（使用语义化版本）
+const version = '1.0.0';
+
+// 必需：作者信息
+const author = 'John Doe';
+
+// 必需：功能描述
+const description = 'This script demonstrates common automation patterns';
+
+// 必需：兼容的最低版本
+const available_version = '2.0.0';
+
+// 可选：脚本依赖
+const soft_dependencies = [];
+const hard_dependencies = [];
+
+// 可选：权限声明
+const requires_native_access = false;
+const native_access_description = '';
+
+// ==================== 脚本代码 ====================
+
+mm.log('Script loaded: ' + display_name)
+
+// 监听事件
+mm.on('io.github.samera2022.samacros.api.event.events.BeforePlaybackStartEvent', 
+    (event) => {
+        mm.log('Playback starting...')
+    })</code></pre>
+
+                <h2>最佳实践</h2>
+                <div class="note">
+                    <strong>✓ 推荐做法：</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>使用唯一、有意义的 registry_name</li>
+                        <li>提供清晰、描述性的中英文注释</li>
+                        <li>遵循语义化版本（SemVer）</li>
+                        <li>正确声明权限和依赖</li>
+                        <li>在代码开始监听事件或执行操作前定义所有元数据</li>
+                    </ul>
+                </div>
+
+                <div class="warning">
+                    <strong>⚠️ 注意事项：</strong>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>registry_name 必须全局唯一</li>
+                        <li>不要在元数据中包含敏感信息</li>
+                        <li>available_version 应该小于或等于实际版本</li>
+                        <li>避免自动更新元数据</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            html.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark-mode');
+            const isDark = html.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeToggle.textContent = isDark ? '☀️' : '🌙';
+        });
+
+        // Section Switching
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('main > section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll to top
+            document.querySelector('main').scrollTop = 0;
+        }
+
+        // Search functionality
+        const searchBox = document.getElementById('searchBox');
+        searchBox.addEventListener('keyup', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm.length < 2) {
+                // Show all if less than 2 characters
+                return;
+            }
+
+            // Highlight matching text
+            const allText = document.querySelector('main').innerText;
+            if (allText.toLowerCase().includes(searchTerm)) {
+                // Could implement highlighting here
+            }
+        });
+
+        // Copy code blocks
+        document.querySelectorAll('pre').forEach(pre => {
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.textContent = 'Copy';
+            button.addEventListener('click', () => {
+                const code = pre.textContent;
+                navigator.clipboard.writeText(code);
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+            pre.appendChild(button);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                searchBox.focus();
+            }
+        });
+    </script>
+</body>
+</html>

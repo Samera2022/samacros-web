@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>saMacros 订阅选择</title>
+    <link rel="icon" type="image/png" href="imgs/saMacrosIcon.png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Rubik:wght@400;600&display=swap" rel="stylesheet" />
     <style>
         :root {
@@ -45,6 +46,29 @@
             text-align: center;
             margin-bottom: 40px;
             animation: fadeIn 0.6s ease-out;
+            position: relative;
+        }
+
+        .header-actions {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .lang-toggle {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.15);
+            color: var(--ink);
+            font-size: 12px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(148, 163, 184, 0.25);
+            transform: translateY(-1px);
         }
 
         h1 {
@@ -157,58 +181,129 @@
 <body>
     <div class="wrap">
         <header>
-            <h1>saMacros 订阅选择</h1>
-            <p class="subtitle">请选择时长并完成 PayPal 支付，支付成功后将跳转到激活页</p>
+            <div class="header-actions">
+                <button class="lang-toggle" id="langToggle" title="切换语言">EN</button>
+            </div>
+            <h1 data-i18n="pricing-title">saMacros 订阅选择</h1>
+            <p class="subtitle" data-i18n="pricing-subtitle">请选择时长并完成 PayPal 支付，支付成功后将跳转到激活页</p>
         </header>
 
         <section class="grid">
             <article class="card">
-                <span class="badge">入门</span>
-                <div class="plan-name">1 个月</div>
+                <span class="badge" data-i18n="pricing-badge-starter">入门</span>
+                <div class="plan-name" data-i18n="pricing-plan-1m">1 个月</div>
                 <div class="price" data-plan="1m">$0.99</div>
-                <p class="desc">短期体验，适合试用与临时需求。</p>
+                <p class="desc" data-i18n="pricing-desc-1m">短期体验，适合试用与临时需求。</p>
                 <div id="paypal-btn-1m"></div>
             </article>
 
             <article class="card">
-                <span class="badge">热门</span>
-                <div class="plan-name">3 个月</div>
+                <span class="badge" data-i18n="pricing-badge-popular">热门</span>
+                <div class="plan-name" data-i18n="pricing-plan-3m">3 个月</div>
                 <div class="price" data-plan="3m">$3.99</div>
-                <p class="desc">性价比首选，适合稳定使用。</p>
+                <p class="desc" data-i18n="pricing-desc-3m">性价比首选，适合稳定使用。</p>
                 <div id="paypal-btn-3m"></div>
             </article>
 
             <article class="card">
-                <span class="badge">稳健</span>
-                <div class="plan-name">6 个月</div>
+                <span class="badge" data-i18n="pricing-badge-steady">稳健</span>
+                <div class="plan-name" data-i18n="pricing-plan-6m">6 个月</div>
                 <div class="price" data-plan="6m">$6.99</div>
-                <p class="desc">更长使用周期，省心省力。</p>
+                <p class="desc" data-i18n="pricing-desc-6m">更长使用周期，省心省力。</p>
                 <div id="paypal-btn-6m"></div>
             </article>
 
             <article class="card">
-                <span class="badge">超值</span>
-                <div class="plan-name">12 个月</div>
+                <span class="badge" data-i18n="pricing-badge-best">超值</span>
+                <div class="plan-name" data-i18n="pricing-plan-12m">12 个月</div>
                 <div class="price" data-plan="12m">$9.99</div>
-                <p class="desc">一年安心使用，适合长期用户。</p>
+                <p class="desc" data-i18n="pricing-desc-12m">一年安心使用，适合长期用户。</p>
                 <div id="paypal-btn-12m"></div>
             </article>
 
             <article class="card">
-                <span class="badge">买断</span>
-                <div class="plan-name">永久使用</div>
+                <span class="badge" data-i18n="pricing-badge-life">买断</span>
+                <div class="plan-name" data-i18n="pricing-plan-life">永久使用</div>
                 <div class="price" data-plan="life">$19.99</div>
-                <p class="desc">一次购买，永久授权。</p>
+                <p class="desc" data-i18n="pricing-desc-life">一次购买，永久授权。</p>
                 <div id="paypal-btn-life"></div>
             </article>
         </section>
 
-        <p class="note">支付成功后会自动跳转到激活页，并携带 PayPal 订单号。</p>
+        <p class="note" data-i18n="pricing-note">支付成功后会自动跳转到激活页，并携带 PayPal 订单号。</p>
     </div>
 
     <script src="https://www.paypal.com/sdk/js?client-id=AYMDOcMgY7-so3F5pfGvJeaWzzSdw9owp_gvgHyV3lRkJ52tMV6mEmstFx8f36zPpIo5nbwgJlkYnL68&currency=USD"></script>
     <script type="module">
         import { PRICING_AMOUNTS } from './pricing-config.js';
+
+        const langToggle = document.getElementById('langToggle');
+        const LANG_KEY = 'saMacros-lang';
+        let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+        let translations = {};
+
+        async function loadTranslations() {
+            try {
+                const zhResponse = await fetch('langs/zh_cn.json');
+                const enResponse = await fetch('langs/en_us.json');
+
+                const zhData = await zhResponse.json();
+                const enData = await enResponse.json();
+
+                translations = {
+                    zh: zhData.pricing || {},
+                    en: enData.pricing || {}
+                };
+
+                return true;
+            } catch (error) {
+                console.error('Failed to load translations:', error);
+                return false;
+            }
+        }
+
+        function updateLanguageDisplay() {
+            if (langToggle) {
+                langToggle.textContent = currentLang === 'zh' ? 'EN' : '中';
+                langToggle.title = currentLang === 'zh' ? 'Switch to English' : '切换为中文';
+            }
+
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+            const bundle = translations[currentLang] || {};
+            if (bundle['pricing-title']) {
+                document.title = bundle['pricing-title'];
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (bundle[key]) {
+                    el.textContent = bundle[key];
+                }
+            });
+        }
+
+        async function initLanguage() {
+            const loaded = await loadTranslations();
+            if (!loaded) {
+                console.warn('Could not load translations from files, using inline fallback');
+            }
+            currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+            updateLanguageDisplay();
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem(LANG_KEY, lang);
+            updateLanguageDisplay();
+        }
+
+        if (langToggle) {
+            langToggle.addEventListener('click', () => {
+                const newLang = currentLang === 'zh' ? 'en' : 'zh';
+                setLanguage(newLang);
+            });
+        }
 
         const plans = [
             { id: 'paypal-btn-1m', key: '1m' },
@@ -254,6 +349,10 @@
                     });
                 }
             }).render(`#${plan.id}`);
+        });
+
+        initLanguage().catch((error) => {
+            console.error('Error initializing language:', error);
         });
     </script>
 </body>
