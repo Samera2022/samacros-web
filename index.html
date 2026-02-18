@@ -119,6 +119,131 @@
             background: var(--primary-dark);
         }
 
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 60px;
+            bottom: 200px;
+            height: auto;
+            width: auto;
+            background: transparent;
+            border: none;
+            padding: 0;
+            padding-left: 30px;
+            z-index: 99;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 竖线连接器 */
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, 
+                rgba(102, 126, 234, 0) 0%,
+                rgba(102, 126, 234, 0.3) 10%,
+                rgba(102, 126, 234, 0.5) 50%,
+                rgba(102, 126, 234, 0.3) 90%,
+                rgba(102, 126, 234, 0) 100%);
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.collapsed {
+            display: none;
+        }
+
+        .sidebar-toggle {
+            display: none;
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            display: none;
+        }
+
+        .sidebar ul {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            gap: 2rem;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }
+
+        .sidebar li {
+            display: flex;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left center;
+            position: relative;
+        }
+
+        /* 聚焦效应：悬停时其他项缩小和淡化 */
+        .sidebar:hover li {
+            transform: scale(0.92);
+            opacity: 0.4;
+        }
+
+        .sidebar:hover li:hover {
+            transform: scale(1.08);
+            opacity: 1;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: rgba(45, 55, 72, 0.7);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0;
+            background: transparent;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sidebar li:hover a {
+            color: rgba(45, 55, 72, 1);
+            transform: translateX(12px);
+            font-weight: 600;
+        }
+
+        /* Remove margin from body - sidebar floats above */
+
+        [data-theme="dark"] .sidebar::before {
+            background: linear-gradient(to bottom, 
+                rgba(102, 126, 234, 0) 0%,
+                rgba(102, 126, 234, 0.4) 10%,
+                rgba(102, 126, 234, 0.6) 50%,
+                rgba(102, 126, 234, 0.4) 90%,
+                rgba(102, 126, 234, 0) 100%);
+        }
+
+        [data-theme="dark"] .sidebar a {
+            color: rgba(226, 232, 240, 0.7);
+        }
+
+        [data-theme="dark"] .sidebar li:hover a {
+            color: rgba(226, 232, 240, 1);
+        }
+
         html {
             scroll-behavior: smooth;
         }
@@ -555,7 +680,47 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                top: auto;
+                left: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 0;
+                z-index: 50;
+            }
+
+            .sidebar ul {
+                flex-direction: row;
+                gap: 0;
+                flex-wrap: wrap;
+            }
+
+            .sidebar li {
+                flex: auto;
+            }
+
+            .sidebar a {
+                padding: 0.75rem 1rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                justify-content: center;
+            }
+
+            .sidebar a:hover {
+                border-left: none;
+                border-bottom-color: var(--primary);
+            }
+
             .hero h1 {
                 font-size: 2rem;
             }
@@ -566,10 +731,6 @@
 
             section h2 {
                 font-size: 1.8rem;
-            }
-
-            nav ul {
-                display: none;
             }
 
             .hero-buttons {
@@ -676,10 +837,6 @@
                 <span>saMacros</span>
             </div>
             <ul>
-                <li><a href="#features">功能特性</a></li>
-                <li><a href="#users">目标用户</a></li>
-                <li><a href="#comparison">对比优势</a></li>
-                <li><a href="#scenarios">实际场景</a></li>
                 <li><a href="pricing.html" class="nav-btn">订阅</a></li>
                 <li><a href="activating.html" class="nav-btn">激活</a></li>
             </ul>
@@ -689,6 +846,16 @@
             </div>
         </nav>
     </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <ul>
+            <li><a href="#features">功能特性</a></li>
+            <li><a href="#users">目标用户</a></li>
+            <li><a href="#comparison">对比优势</a></li>
+            <li><a href="#scenarios">实际场景</a></li>
+        </ul>
+    </aside>
 
     <!-- Hero Section -->
     <section class="hero">
