@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "WebWorker"],
+    "types": ["@cloudflare/workers-types"],
+    "checkJs": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    ".wrangler"
+  ]
+}

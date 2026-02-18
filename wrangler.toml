@@ -1,0 +1,12 @@
+name = "samacros-activation"
+compatibility_date = "2026-02-18"
+pages_build_output_dir = "."
+
+# KV 命名空间绑定
+[[kv_namespaces]]
+binding = "ORDER_DB"
+id = "772f9be0b010429fada255b3800e9d99"
+
+# 环境变量
+[vars]
+ENVIRONMENT = "production"

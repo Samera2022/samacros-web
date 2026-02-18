@@ -1,0 +1,27 @@
+{
+  "name": "samacros-activation-center",
+  "version": "1.0.0",
+  "description": "saMacros 离线激活中心 - Cloudflare Pages 全栈应用",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "deploy": "wrangler pages deploy .",
+    "kv:create": "wrangler kv:namespace create ORDER_DB",
+    "kv:list": "wrangler kv:namespace list",
+    "generate-keys": "openssl genrsa -out private.pem 2048 && openssl rsa -in private.pem -pubout -out public.pem"
+  },
+  "keywords": [
+    "cloudflare",
+    "pages",
+    "functions",
+    "activation",
+    "rsa",
+    "crypto"
+  ],
+  "author": "saMacros Team",
+  "license": "Proprietary",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240925.0",
+    "@types/node": "^20.0.0",
+    "wrangler": "^3.0.0"
+  }
+}

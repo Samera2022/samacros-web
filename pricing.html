@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>saMacros 订阅选择</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Rubik:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-2: #111827;
+            --accent-1: #f59e0b;
+            --accent-2: #22d3ee;
+            --ink: #e5e7eb;
+            --muted: #94a3b8;
+            --card: rgba(17, 24, 39, 0.78);
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            color: var(--ink);
+            min-height: 100vh;
+            background: radial-gradient(1200px 800px at 10% 10%, rgba(34, 211, 238, 0.15), transparent 60%),
+                        radial-gradient(1000px 600px at 90% 15%, rgba(245, 158, 11, 0.18), transparent 55%),
+                        linear-gradient(160deg, var(--bg-1), var(--bg-2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(12px);
+            transform: translateY(10px);
+            opacity: 0;
+            animation: rise 0.5s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.05s; }
+        .card:nth-child(2) { animation-delay: 0.12s; }
+        .card:nth-child(3) { animation-delay: 0.19s; }
+        .card:nth-child(4) { animation-delay: 0.26s; }
+        .card:nth-child(5) { animation-delay: 0.33s; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #0f172a;
+            background: linear-gradient(120deg, var(--accent-2), var(--accent-1));
+            margin-bottom: 12px;
+        }
+
+        .plan-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .desc {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 44px;
+            margin-bottom: 16px;
+        }
+
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #0f172a;
+            font-weight: 700;
+            background: linear-gradient(120deg, var(--accent-2), var(--accent-1));
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(245, 158, 11, 0.25);
+        }
+
+        .note {
+            margin-top: 26px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        @keyframes rise {
+            from { transform: translateY(14px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <h1>saMacros 订阅选择</h1>
+            <p class="subtitle">请选择时长并完成 PayPal 支付，支付成功后将跳转到激活页</p>
+        </header>
+
+        <section class="grid">
+            <article class="card">
+                <span class="badge">入门</span>
+                <div class="plan-name">1 个月</div>
+                <div class="price" data-plan="1m">$0.99</div>
+                <p class="desc">短期体验，适合试用与临时需求。</p>
+                <div id="paypal-btn-1m"></div>
+            </article>
+
+            <article class="card">
+                <span class="badge">热门</span>
+                <div class="plan-name">3 个月</div>
+                <div class="price" data-plan="3m">$3.99</div>
+                <p class="desc">性价比首选，适合稳定使用。</p>
+                <div id="paypal-btn-3m"></div>
+            </article>
+
+            <article class="card">
+                <span class="badge">稳健</span>
+                <div class="plan-name">6 个月</div>
+                <div class="price" data-plan="6m">$6.99</div>
+                <p class="desc">更长使用周期，省心省力。</p>
+                <div id="paypal-btn-6m"></div>
+            </article>
+
+            <article class="card">
+                <span class="badge">超值</span>
+                <div class="plan-name">12 个月</div>
+                <div class="price" data-plan="12m">$9.99</div>
+                <p class="desc">一年安心使用，适合长期用户。</p>
+                <div id="paypal-btn-12m"></div>
+            </article>
+
+            <article class="card">
+                <span class="badge">买断</span>
+                <div class="plan-name">永久使用</div>
+                <div class="price" data-plan="life">$19.99</div>
+                <p class="desc">一次购买，永久授权。</p>
+                <div id="paypal-btn-life"></div>
+            </article>
+        </section>
+
+        <p class="note">支付成功后会自动跳转到激活页，并携带 PayPal 订单号。</p>
+    </div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AfD53QiwYLEouurzgRcdZZCFfFLDUId5LOgK1Tm-M0AVMYrT0EWA7YQYcMpy3y-q_9xau4O6DjFFeUv4&currency=USD"></script>
+    <script type="module">
+        import { PRICING_AMOUNTS } from './pricing-config.js';
+
+        const plans = [
+            { id: 'paypal-btn-1m', key: '1m' },
+            { id: 'paypal-btn-3m', key: '3m' },
+            { id: 'paypal-btn-6m', key: '6m' },
+            { id: 'paypal-btn-12m', key: '12m' },
+            { id: 'paypal-btn-life', key: 'life' }
+        ];
+
+        document.querySelectorAll('.price[data-plan]').forEach((el) => {
+            const key = el.getAttribute('data-plan');
+            const amount = PRICING_AMOUNTS[key];
+            if (amount) {
+                el.textContent = `$${amount}`;
+            }
+        });
+
+        plans.forEach((plan) => {
+            const amount = PRICING_AMOUNTS[plan.key];
+            if (!amount) {
+                return;
+            }
+            paypal.Buttons({
+                style: {
+                    layout: 'vertical',
+                    color: 'gold',
+                    shape: 'rect',
+                    label: 'paypal'
+                },
+                createOrder: (data, actions) => {
+                    return actions.order.create({
+                        purchase_units: [
+                            {
+                                amount: { value: amount }
+                            }
+                        ]
+                    });
+                },
+                onApprove: (data, actions) => {
+                    return actions.order.capture().then(() => {
+                        const nextUrl = `index.html?paypal_order_id=${encodeURIComponent(data.orderID)}`;
+                        window.location.href = nextUrl;
+                    });
+                }
+            }).render(`#${plan.id}`);
+        });
+    </script>
+</body>
+</html>

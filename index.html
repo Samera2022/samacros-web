@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saMacros Snapshot Activation Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .hint {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result-area {
+            margin-top: 32px;
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .result-area.show {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #10b981;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            min-height: 120px;
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .copy-btn {
+            margin-top: 12px;
+            background: #10b981;
+        }
+
+        .copy-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            font-size: 14px;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔐 saMacros Activation Center</h1>
+            <p class="subtitle">2026 Edition - Secure Offline Activation</p>
+        </header>
+
+        <form id="activationForm">
+            <div class="input-group">
+                <label for="orderId">Payment Order ID</label>
+                <input 
+                    type="text" 
+                    id="orderId" 
+                    name="orderId" 
+                    placeholder="例如: ORD-20260218-ABCD1234"
+                    required
+                    autocomplete="off"
+                />
+                <p class="hint">请输入您从发卡平台收到的订单号</p>
+            </div>
+
+            <div class="input-group">
+                <label for="machineCode">Machine Code (HWID)</label>
+                <input 
+                    type="text" 
+                    id="machineCode" 
+                    name="machineCode" 
+                    placeholder="例如: SAM-A1B2C3D4E5F6"
+                    required
+                    autocomplete="off"
+                />
+                <p class="hint">从 saMacros 客户端复制您的机器码</p>
+            </div>
+
+            <div class="input-group">
+                <label for="paypalOrderId">PayPal Order ID</label>
+                <input 
+                    type="text" 
+                    id="paypalOrderId" 
+                    name="paypalOrderId" 
+                    placeholder="例如: 5O190127TN364715T"
+                    required
+                    autocomplete="off"
+                />
+                <p class="hint">请输入 PayPal 订单号（用于后台核验金额）</p>
+            </div>
+
+            <button type="submit" id="submitBtn">
+                Generate Activation Key
+            </button>
+        </form>
+
+        <div id="alertBox"></div>
+
+        <div class="result-area" id="resultArea">
+            <label>Your Activation Key:</label>
+            <textarea id="activationKey" readonly></textarea>
+            <button class="copy-btn" id="copyBtn">📋 Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('activationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
+        const resultArea = document.getElementById('resultArea');
+        const activationKeyInput = document.getElementById('activationKey');
+        const copyBtn = document.getElementById('copyBtn');
+        const orderIdInput = document.getElementById('orderId');
+        const machineCodeInput = document.getElementById('machineCode');
+        const paypalOrderIdInput = document.getElementById('paypalOrderId');
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const paypalOrderIdParam = queryParams.get('paypal_order_id');
+        if (paypalOrderIdParam) {
+            paypalOrderIdInput.value = paypalOrderIdParam;
+        }
+
+        // 显示提示信息
+        function showAlert(message, type = 'error') {
+            alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => {
+                alertBox.innerHTML = '';
+            }, 5000);
+        }
+
+        // 客户端验证
+        function validateInputs() {
+            const orderId = orderIdInput.value.trim();
+            const machineCode = machineCodeInput.value.trim();
+            const paypalOrderId = paypalOrderIdInput.value.trim();
+
+            if (!orderId || !machineCode || !paypalOrderId) {
+                showAlert('请填写所有必填字段');
+                return false;
+            }
+
+            // 验证 HWID 格式 (SAM-XXXX 规则)
+            const hwidPattern = /^SAM-[A-Z0-9]{12,}$/i;
+            if (!hwidPattern.test(machineCode)) {
+                showAlert('机器码格式无效，应为 SAM-XXXXXXXXXXXX 格式');
+                return false;
+            }
+
+            return true;
+        }
+
+        // 表单提交
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateInputs()) {
+                return;
+            }
+
+            // 禁用按钮并显示加载状态
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Generating...';
+            resultArea.classList.remove('show');
+            alertBox.innerHTML = '';
+
+            try {
+                const response = await fetch('/api/activate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        order_id: orderIdInput.value.trim(),
+                        machine_code: machineCodeInput.value.trim(),
+                        paypal_order_id: paypalOrderIdInput.value.trim()
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}: 请求失败`);
+                }
+
+                // 显示激活码
+                activationKeyInput.value = data.activation_key;
+                resultArea.classList.add('show');
+                showAlert('✅ 激活码生成成功！请妥善保存。', 'success');
+
+            } catch (error) {
+                showAlert(`❌ ${error.message}`);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Generate Activation Key';
+            }
+        });
+
+        // 复制到剪贴板
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(activationKeyInput.value);
+                copyBtn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Copy to Clipboard';
+                }, 2000);
+            } catch (error) {
+                // 降级方案
+                activationKeyInput.select();
+                document.execCommand('copy');
+                copyBtn.innerHTML = '✅ Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = '📋 Copy to Clipboard';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
