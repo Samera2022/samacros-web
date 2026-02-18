@@ -95,6 +95,10 @@
             border-radius: 0.5rem;
             transition: all 0.3s;
             color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: auto;
         }
 
         .theme-toggle:hover {
@@ -103,6 +107,16 @@
 
         [data-theme="dark"] .theme-toggle:hover {
             background-color: #4a5568;
+        }
+
+        [data-theme="dark"] nav a.nav-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        [data-theme="dark"] nav a.nav-btn:hover {
+            color: white;
+            background: var(--primary-dark);
         }
 
         html {
@@ -124,7 +138,7 @@
             background-color: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid var(--border);
             z-index: 100;
-            padding: 1rem 2rem;
+            padding: 0.75rem 2rem;
         }
 
         nav {
@@ -133,12 +147,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            min-height: 60px;
         }
 
         .nav-right {
             display: flex;
             align-items: center;
             gap: 1rem;
+            height: 100%;
         }
 
         .logo {
@@ -149,12 +166,15 @@
             font-weight: 700;
             text-decoration: none;
             cursor: pointer;
+            height: 100%;
         }
 
         .logo img {
             width: 32px;
             height: 32px;
             border-radius: 0.5rem;
+            display: block;
+            flex-shrink: 0;
         }
 
         .logo span {
@@ -162,12 +182,21 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: flex;
+            align-items: center;
         }
 
         nav ul {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
+        }
+
+        nav ul li {
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
 
         nav a {
@@ -175,10 +204,32 @@
             color: var(--text-dark);
             font-weight: 500;
             transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            height: 100%;
         }
 
         nav a:hover {
             color: var(--primary);
+        }
+
+        nav a.nav-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: auto;
+        }
+
+        nav a.nav-btn:hover {
+            color: white;
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary {
@@ -191,7 +242,10 @@
             border: none;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: auto;
         }
 
         .btn-primary:hover {
@@ -626,6 +680,8 @@
                 <li><a href="#users">目标用户</a></li>
                 <li><a href="#comparison">对比优势</a></li>
                 <li><a href="#scenarios">实际场景</a></li>
+                <li><a href="pricing.html" class="nav-btn">订阅</a></li>
+                <li><a href="activating.html" class="nav-btn">激活</a></li>
             </ul>
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle" title="切换主题">🌙</button>
