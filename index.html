@@ -44,10 +44,6 @@
             color: var(--text-dark);
         }
 
-        [data-theme="dark"] header {
-            background-color: rgba(26, 32, 44, 0.95);
-        }
-
         [data-theme="dark"] .card {
             background-color: #2d3748;
             border-color: var(--border);
@@ -110,13 +106,13 @@
         }
 
         [data-theme="dark"] nav a.nav-btn {
-            background: var(--primary);
-            color: white;
+            background: transparent;
+            color: var(--primary);
         }
 
         [data-theme="dark"] nav a.nav-btn:hover {
-            color: white;
-            background: var(--primary-dark);
+            color: var(--primary-dark);
+            background: rgba(102, 126, 234, 0.15);
         }
 
         /* Sidebar Navigation */
@@ -259,11 +255,22 @@
         header {
             position: sticky;
             top: 0;
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.95);
-            border-bottom: 1px solid var(--border);
+            background-color: transparent;
+            border-bottom: 1px solid transparent;
             z-index: 100;
             padding: 0.75rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        [data-theme="dark"] header.scrolled {
+            background-color: rgba(26, 32, 44, 0.7);
+            border-bottom: 1px solid rgba(74, 85, 104, 0.5);
         }
 
         nav {
@@ -339,22 +346,23 @@
         }
 
         nav a.nav-btn {
-            background: var(--primary);
-            color: white;
+            background: transparent;
+            color: var(--primary);
             padding: 0.5rem 1rem;
             border-radius: 0.5rem;
-            font-size: 0.9rem;
+            font-size: 1.15rem;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             height: auto;
+            border: none;
+            transition: all 0.3s ease;
         }
 
         nav a.nav-btn:hover {
-            color: white;
-            background: var(--primary-dark);
+            color: var(--primary-dark);
+            background: rgba(102, 126, 234, 0.1);
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary {
@@ -839,6 +847,7 @@
             <ul>
                 <li><a href="pricing.html" class="nav-btn">订阅</a></li>
                 <li><a href="activating.html" class="nav-btn">激活</a></li>
+                <li><a href="#" class="nav-btn">API文档</a></li>
             </ul>
             <div class="nav-right">
                 <button class="theme-toggle" id="themeToggle" title="切换主题">🌙</button>
@@ -1407,6 +1416,22 @@ mm.on('AfterRecordStopEvent', (event) => {
 
         // Initialize on page load
         initTheme();
+
+        // Header scroll effect
+        const header = document.querySelector('header');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+            
+            lastScroll = currentScroll;
+        });
 
         // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
