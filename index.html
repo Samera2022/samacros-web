@@ -50,7 +50,8 @@
         }
 
         [data-theme="dark"] .code-block {
-            background-color: #1a202c;
+            background-color: #0f1419;
+            border: 1px solid #2d3748;
         }
 
         [data-theme="dark"] .comparison {
@@ -79,6 +80,31 @@
         [data-theme="dark"] .btn-secondary:hover {
             background-color: var(--primary);
             color: white;
+        }
+
+        /* CTA Button Override */
+        .btn-cta {
+            background: white !important;
+            background-color: white !important;
+            color: var(--primary) !important;
+        }
+
+        .btn-cta:hover {
+            background: white !important;
+            background-color: white !important;
+        }
+
+        [data-theme="dark"] .btn-cta {
+            background: #1a202c !important;
+            background-color: #1a202c !important;
+            color: white !important;
+            border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        }
+
+        [data-theme="dark"] .btn-cta:hover {
+            background: #2d3748 !important;
+            background-color: #2d3748 !important;
+            border-color: rgba(255, 255, 255, 0.5) !important;
         }
 
         /* Theme Toggle Button */
@@ -809,11 +835,15 @@
 
         /* Footer */
         footer {
-            background: var(--text-dark);
+            background: #2d3748;
             color: white;
             padding: 3rem 2rem;
             text-align: center;
             margin-top: 5rem;
+        }
+
+        [data-theme="dark"] footer {
+            background: #1a202c;
         }
 
         footer p {
@@ -919,6 +949,97 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             margin: 3rem 0;
+        }
+
+        /* Showcase Carousel */
+        .showcase-carousel {
+            position: relative;
+            width: 100%;
+            height: 550px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 4rem 0;
+            perspective: 1200px;
+        }
+
+        .showcase-carousel .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .showcase-carousel .carousel-card {
+            position: absolute;
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .showcase-carousel .carousel-card.center {
+            opacity: 1;
+            transform: scale(1.05) translateX(0) rotateY(0deg);
+            z-index: 3;
+            pointer-events: auto;
+            box-shadow: 0 25px 70px rgba(102, 126, 234, 0.3);
+            border-color: var(--primary);
+        }
+
+        .showcase-carousel .carousel-card.left {
+            opacity: 0.5;
+            transform: scale(0.8) translateX(-380px) rotateY(20deg);
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        .showcase-carousel .carousel-card.right {
+            opacity: 0.5;
+            transform: scale(0.8) translateX(380px) rotateY(-20deg);
+            z-index: 2;
+            pointer-events: auto;
+        }
+
+        .showcase-carousel .carousel-card.hidden {
+            opacity: 0;
+            transform: scale(0.6);
+            z-index: 1;
+        }
+
+        [data-theme="dark"] .showcase-carousel .carousel-card {
+            background-color: #2d3748;
+            border-color: var(--border);
+        }
+
+        [data-theme="dark"] .showcase-carousel .carousel-card.center {
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .showcase-carousel {
+                height: 500px;
+            }
+
+            .showcase-carousel .carousel-card {
+                width: 320px;
+            }
+
+            .showcase-carousel .carousel-card.left,
+            .showcase-carousel .carousel-card.right {
+                opacity: 0;
+                pointer-events: none;
+            }
         }
 
         .showcase-item {
@@ -1325,28 +1446,46 @@
                 现代化的用户界面设计，支持暗色模式，提供一流的用户体验
             </p>
             
-            <div class="showcase-grid">
-                <div class="showcase-item">
-                    <div class="showcase-image">
-                        <img src="imgs/saMacrosIcon.png" alt="saMacros 应用图标">
+            <div class="carousel-container showcase-carousel" id="showcaseCarousel">
+                <button class="carousel-btn prev" onclick="showcaseCarouselPrev()" aria-label="上一个">‹</button>
+                <div class="carousel-wrapper">
+                    <div class="carousel-card" data-index="0">
+                        <div class="showcase-image">
+                            <img src="imgs/saMacrosMainFrame.png" alt="saMacros 主界面">
+                        </div>
+                        <div class="showcase-title">🎨 主界面</div>
+                        <div class="showcase-description">清爽的主界面设计，直观的功能布局，易学易用</div>
                     </div>
-                    <div class="showcase-title">💡 应用图标</div>
-                    <div class="showcase-description">专业设计的应用图标，代表简洁高效的设计理念</div>
-                </div>
-                <div class="showcase-item">
-                    <div class="showcase-image">
-                        <img src="imgs/saMacrosMainFrame.png" alt="saMacros 主界面">
+                    <div class="carousel-card" data-index="1">
+                        <div class="showcase-image">
+                            <img src="imgs/saMacrosSettingsDialog.png" alt="saMacros 设置对话框">
+                        </div>
+                        <div class="showcase-title">⚙️ 设置面板</div>
+                        <div class="showcase-description">强大的设置选项，满足个性化需求，一应俱全</div>
                     </div>
-                    <div class="showcase-title">🎨 主界面</div>
-                    <div class="showcase-description">清爽的主界面设计，直观的功能布局，易学易用</div>
-                </div>
-                <div class="showcase-item">
-                    <div class="showcase-image">
-                        <img src="imgs/saMacrosSettingsDialog.png" alt="saMacros 设置对话框">
+                    <div class="carousel-card" data-index="2">
+                        <div class="showcase-image">
+                            <img src="imgs/saMacrosScriptManager.png" alt="saMacros 脚本管理器">
+                        </div>
+                        <div class="showcase-title">📜 脚本管理器</div>
+                        <div class="showcase-description">可视化管理所有脚本，一键启用禁用，轻松掌控</div>
                     </div>
-                    <div class="showcase-title">⚙️ 设置面板</div>
-                    <div class="showcase-description">强大的设置选项，满足个性化需求，一应俱全</div>
+                    <div class="carousel-card" data-index="3">
+                        <div class="showcase-image">
+                            <img src="imgs/saMacrosScriptManagerCheck.png" alt="saMacros 脚本检查">
+                        </div>
+                        <div class="showcase-title">🔍 脚本检查</div>
+                        <div class="showcase-description">智能检查脚本依赖和潜在问题，确保脚本正常运行</div>
+                    </div>
+                    <div class="carousel-card" data-index="4">
+                        <div class="showcase-image">
+                            <img src="imgs/saMacrosScriptWarning.png" alt="saMacros 脚本警告">
+                        </div>
+                        <div class="showcase-title">⚠️ 安全提示</div>
+                        <div class="showcase-description">严格的安全机制，敏感操作需用户确认，保护系统安全</div>
+                    </div>
                 </div>
+                <button class="carousel-btn next" onclick="showcaseCarouselNext()" aria-label="下一个">›</button>
             </div>
         </div>
     </section>
@@ -1400,7 +1539,7 @@ mm.on('AfterRecordStopEvent', (event) => {
                     <span>📚</span> <span>支持依赖管理（硬依赖和软依赖）</span>
                 </li>
                 <li style="padding: 0.5rem 0; display: flex; gap: 0.5rem;">
-                    <span>🔒</span> <span>白名单机制保证安全性</span>
+                    <span>🔒</span> <span>白名单机制增强安全性</span>
                 </li>
                 <li style="padding: 0.5rem 0; display: flex; gap: 0.5rem;">
                     <span>🎁</span> <span>作者可以构建复杂的自动化套件</span>
@@ -1488,7 +1627,7 @@ mm.on('AfterRecordStopEvent', (event) => {
             <p style="font-size: 1.2rem; margin-bottom: 2rem; color: rgba(255, 255, 255, 0.9);">
                 加入数千名用户，让 saMacros 为你节省宝贵的时间和精力
             </p>
-            <button class="btn-primary" style="background-color: white; color: var(--primary); border: none; padding: 1rem 2.5rem; font-size: 1.1rem;">
+            <button class="btn-primary btn-cta" style="border: none; padding: 1rem 2.5rem; font-size: 1.1rem;">
                 立即下载
             </button>
             <p style="margin-top: 1rem; color: rgba(255, 255, 255, 0.8);">无广告 | 无跟踪 | 核心功能永久免费</p>
@@ -1609,7 +1748,7 @@ mm.on('AfterRecordStopEvent', (event) => {
 
         // Carousel functionality
         let currentIndex = 0;
-        const carouselCards = document.querySelectorAll('.carousel-card');
+        const carouselCards = document.querySelectorAll('#problemCarousel .carousel-card');
         const totalCards = carouselCards.length;
 
         function updateCarousel() {
@@ -1660,6 +1799,63 @@ mm.on('AfterRecordStopEvent', (event) => {
                     carouselPrev();
                 } else if (card.classList.contains('right')) {
                     carouselNext();
+                }
+            });
+        });
+
+        // Showcase Carousel functionality
+        let showcaseCurrentIndex = 0;
+        const showcaseCarouselCards = document.querySelectorAll('#showcaseCarousel .carousel-card');
+        const showcaseTotalCards = showcaseCarouselCards.length;
+
+        function updateShowcaseCarousel() {
+            showcaseCarouselCards.forEach((card, index) => {
+                card.classList.remove('center', 'left', 'right', 'hidden');
+                
+                if (index === showcaseCurrentIndex) {
+                    card.classList.add('center');
+                } else if (index === (showcaseCurrentIndex - 1 + showcaseTotalCards) % showcaseTotalCards) {
+                    card.classList.add('left');
+                } else if (index === (showcaseCurrentIndex + 1) % showcaseTotalCards) {
+                    card.classList.add('right');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        function showcaseCarouselNext() {
+            showcaseCurrentIndex = (showcaseCurrentIndex + 1) % showcaseTotalCards;
+            updateShowcaseCarousel();
+        }
+
+        function showcaseCarouselPrev() {
+            showcaseCurrentIndex = (showcaseCurrentIndex - 1 + showcaseTotalCards) % showcaseTotalCards;
+            updateShowcaseCarousel();
+        }
+
+        // Initialize showcase carousel
+        updateShowcaseCarousel();
+
+        // Auto-play showcase carousel
+        let showcaseCarouselInterval = setInterval(showcaseCarouselNext, 5000);
+
+        // Pause on hover
+        document.getElementById('showcaseCarousel').addEventListener('mouseenter', () => {
+            clearInterval(showcaseCarouselInterval);
+        });
+
+        document.getElementById('showcaseCarousel').addEventListener('mouseleave', () => {
+            showcaseCarouselInterval = setInterval(showcaseCarouselNext, 5000);
+        });
+
+        // Click on side cards to navigate
+        showcaseCarouselCards.forEach((card, index) => {
+            card.addEventListener('click', () => {
+                if (card.classList.contains('left')) {
+                    showcaseCarouselPrev();
+                } else if (card.classList.contains('right')) {
+                    showcaseCarouselNext();
                 }
             });
         });
