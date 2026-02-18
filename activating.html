@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>saMacros Snapshot Activation Center</title>
     <style>
+        :root {
+            --bg-1: #0f172a;
+            --bg-2: #111827;
+            --accent-1: #667eea;
+            --accent-2: #764ba2;
+            --ink: #e5e7eb;
+            --muted: #94a3b8;
+            --card: rgba(17, 24, 39, 0.78);
+            --border: rgba(148, 163, 184, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,18 +24,23 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: radial-gradient(1200px 800px at 10% 10%, rgba(102, 126, 234, 0.1), transparent 60%),
+                        radial-gradient(1000px 600px at 90% 15%, rgba(118, 75, 162, 0.12), transparent 55%),
+                        linear-gradient(160deg, var(--bg-1), var(--bg-2));
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            color: var(--ink);
         }
 
         .container {
-            background: white;
+            background: var(--card);
+            border: 1px solid var(--border);
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
             max-width: 600px;
             width: 100%;
             padding: 40px;
@@ -48,14 +64,14 @@
         }
 
         h1 {
-            color: #667eea;
+            color: var(--ink);
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #6b7280;
+            color: var(--muted);
             font-size: 14px;
         }
 
@@ -66,7 +82,7 @@
 
         label {
             display: block;
-            color: #374151;
+            color: var(--ink);
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
@@ -75,26 +91,145 @@
         input[type="text"], select {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e5e7eb;
+            border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--ink);
         }
 
         input[type="text"]:focus, select:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
+            border-color: var(--accent-1);
+            background: rgba(102, 126, 234, 0.15);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         select {
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e5e7eb' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        /* 下拉选项样式 */
+        select option {
+            background: var(--bg-2);
+            color: var(--ink);
+            padding: 8px 12px;
+        }
+
+        select option:checked {
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: white;
+        }
+
+        /* 自定义下拉菜单 */
+        .custom-select {
+            position: relative;
+            display: block;
+        }
+
+        .custom-select select {
+            display: none;
+        }
+
+        .select-button {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--ink);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .select-button:focus {
+            outline: none;
+            border-color: var(--accent-1);
+            background: rgba(102, 126, 234, 0.15);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            margin-top: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .select-dropdown.open {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        /* 下拉菜单滚动条 */
+        .select-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .select-dropdown::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .select-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 3px;
+        }
+
+        .select-dropdown::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        .select-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            color: var(--ink);
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            font-size: 13px;
+        }
+
+        .select-option:last-child {
+            border-bottom: none;
+        }
+
+        .select-option:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .select-option.selected {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            color: var(--accent-1);
+            font-weight: 600;
+        }
+
+        .select-option:hover.selected {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4));
         }
 
         .hint {
-            color: #9ca3af;
+            color: var(--muted);
             font-size: 12px;
             margin-top: 6px;
         }
@@ -102,7 +237,7 @@
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-1) 0%, var(--accent-2) 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -145,23 +280,23 @@
         textarea {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #10b981;
+            border: 1px solid rgba(72, 187, 120, 0.3);
             border-radius: 8px;
             font-size: 13px;
             font-family: 'Courier New', monospace;
             resize: vertical;
             min-height: 120px;
-            background: #ecfdf5;
-            color: #065f46;
+            background: rgba(72, 187, 120, 0.1);
+            color: #86efac;
         }
 
         .copy-btn {
             margin-top: 12px;
-            background: #10b981;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
         }
 
         .copy-btn:hover:not(:disabled) {
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
         }
 
         .alert {
@@ -173,15 +308,15 @@
         }
 
         .alert-error {
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fca5a5;
+            background: rgba(245, 85, 85, 0.1);
+            color: #fca5a5;
+            border: 1px solid rgba(245, 85, 85, 0.3);
         }
 
         .alert-success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #6ee7b7;
+            background: rgba(72, 187, 120, 0.1);
+            color: #86efac;
+            border: 1px solid rgba(72, 187, 120, 0.3);
         }
 
         .spinner {
@@ -210,11 +345,19 @@
         <form id="activationForm">
             <div class="input-group">
                 <label for="platform">Purchase Platform</label>
-                <select id="platform" name="platform" required>
-                    <option value="">-- 选择购买平台 --</option>
-                    <option value="paypal">PayPal (Global)</option>
-                    <option value="other">其他平台</option>
-                </select>
+                <div class="custom-select" id="platformSelect">
+                    <button type="button" class="select-button">-- 选择购买平台 --</button>
+                    <select id="platform" name="platform" required>
+                        <option value="">-- 选择购买平台 --</option>
+                        <option value="paypal">PayPal (Global)</option>
+                        <option value="other">其他平台</option>
+                    </select>
+                    <div class="select-dropdown">
+                        <div class="select-option" data-value="">-- 选择购买平台 --</div>
+                        <div class="select-option" data-value="paypal">PayPal (Global)</div>
+                        <div class="select-option" data-value="other">其他平台</div>
+                    </div>
+                </div>
                 <p class="hint">选择您支付时使用的平台</p>
             </div>
 
@@ -272,6 +415,79 @@
     </div>
 
     <script>
+        // 自定义下拉菜单处理
+        function initCustomSelect() {
+            const customSelects = document.querySelectorAll('.custom-select');
+            
+            customSelects.forEach(customSelect => {
+                const button = customSelect.querySelector('.select-button');
+                const dropdown = customSelect.querySelector('.select-dropdown');
+                const options = customSelect.querySelectorAll('.select-option');
+                const nativeSelect = customSelect.querySelector('select');
+                
+                // 初始化按钮：添加箭头
+                function updateButtonDisplay(text) {
+                    button.textContent = text;
+                    button.style.display = 'flex';
+                    button.style.justifyContent = 'space-between';
+                    button.style.alignItems = 'center';
+                    const arrowSpan = document.createElement('span');
+                    arrowSpan.textContent = '▼';
+                    arrowSpan.style.marginLeft = 'auto';
+                    arrowSpan.style.fontSize = '12px';
+                    arrowSpan.style.color = 'var(--muted)';
+                    arrowSpan.style.flexShrink = '0';
+                    button.appendChild(arrowSpan);
+                }
+                
+                // 初始化
+                updateButtonDisplay(button.textContent);
+                
+                // 打开/关闭下拉菜单
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdown.classList.toggle('open');
+                });
+                
+                // 选择选项
+                options.forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const value = option.dataset.value;
+                        const text = option.textContent;
+                        
+                        // 清空按钮并重新更新显示
+                        button.innerHTML = '';
+                        updateButtonDisplay(text);
+                        
+                        // 更新选中状态
+                        options.forEach(opt => opt.classList.remove('selected'));
+                        option.classList.add('selected');
+                        
+                        // 更新原生 select
+                        nativeSelect.value = value;
+                        
+                        // 关闭下拉菜单
+                        dropdown.classList.remove('open');
+                        
+                        // 触发 change 事件
+                        nativeSelect.dispatchEvent(new Event('change'));
+                    });
+                });
+                
+                // 点击外部关闭
+                document.addEventListener('click', (e) => {
+                    if (!customSelect.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                    }
+                });
+            });
+        }
+        
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', initCustomSelect);
+
         const form = document.getElementById('activationForm');
         const submitBtn = document.getElementById('submitBtn');
         const alertBox = document.getElementById('alertBox');
