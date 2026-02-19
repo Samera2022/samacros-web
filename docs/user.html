@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>saMacros — User Manual</title>
+  <link rel="stylesheet" href="tailwind.css" />
+  <style>
+    /* Smooth scroll & custom scrollbar */
+    html { scroll-behavior: smooth; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+
+    /* Sidebar active link */
+    .nav-link.active {
+      background-color: #eff6ff;
+      color: #2563eb;
+      font-weight: 600;
+      border-left: 3px solid #2563eb;
+    }
+    .nav-link {
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .nav-link:hover { background-color: #f8fafc; color: #1d4ed8; }
+
+    /* Code blocks */
+    pre { overflow-x: auto; }
+    code { font-family: 'Menlo', 'Consolas', monospace; font-size: 0.875rem; }
+
+    /* Step circle */
+    .step-circle {
+      min-width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.875rem;
+    }
+
+    /* Sidebar hide on small screens */
+    @media (max-width: 1023px) {
+      #sidebar { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+<!-- ═══════════════════ TOP HEADER ═══════════════════ -->
+<header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+  <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center gap-4">
+    <!-- Logo placeholder -->
+    <div class="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-lg select-none">S</div>
+    <div>
+      <span class="text-xl font-bold text-slate-900 tracking-tight">saMacros</span>
+      <span class="ml-3 text-sm text-slate-500 hidden sm:inline">User Manual &amp; Operation Guide</span>
+    </div>
+    <span class="ml-auto text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">v2.0.0</span>
+  </div>
+</header>
+
+<div class="max-w-screen-xl mx-auto flex min-h-screen">
+
+  <!-- ═══════════════════ LEFT SIDEBAR ═══════════════════ -->
+  <aside id="sidebar" class="w-64 shrink-0 sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto bg-white border-r border-slate-200 py-6 px-4">
+    <nav class="space-y-0.5 text-sm">
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Overview</p>
+      <a href="#intro"       class="nav-link block px-3 py-2 rounded-md text-slate-700">Introduction</a>
+      <a href="#quickstart"  class="nav-link block px-3 py-2 rounded-md text-slate-700">Quick Start</a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mt-5 mb-2">Features</p>
+      <a href="#recording"   class="nav-link block px-3 py-2 rounded-md text-slate-700">Recording a Macro</a>
+      <a href="#playback"    class="nav-link block px-3 py-2 rounded-md text-slate-700">Playing Back</a>
+      <a href="#pause"       class="nav-link block px-3 py-2 rounded-md text-slate-700">Pause &amp; Resume</a>
+      <a href="#save-load"   class="nav-link block px-3 py-2 rounded-md text-slate-700">Save &amp; Load</a>
+      <a href="#settings"    class="nav-link block px-3 py-2 rounded-md text-slate-700">Settings</a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mt-5 mb-2">Reference</p>
+      <a href="#hotkeys"     class="nav-link block px-3 py-2 rounded-md text-slate-700">Hotkey Reference</a>
+      <a href="#trouble"     class="nav-link block px-3 py-2 rounded-md text-slate-700">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+  <main class="flex-1 px-6 lg:px-12 py-10 max-w-4xl">
+
+    <!-- ──────────── INTRODUCTION ──────────── -->
+    <section id="intro" class="mb-16 scroll-mt-20">
+      <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg mb-8">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-3xl font-black">S</div>
+          <div>
+            <h1 class="text-3xl font-black tracking-tight">saMacros</h1>
+            <p class="text-blue-200 text-sm mt-0.5">A High-Performance Desktop Automation Platform</p>
+          </div>
+        </div>
+        <p class="text-blue-100 leading-relaxed max-w-2xl">
+          saMacros lets you <strong class="text-white">record</strong> and <strong class="text-white">replay</strong>
+          any sequence of mouse &amp; keyboard actions on your desktop — with precise timing, loop control, and
+          an intuitive pause/resume workflow.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium">
+          <span class="bg-white/20 px-3 py-1 rounded-full">Pause &amp; Resume</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">7+ Languages</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">JDK 21+</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">Apache 2.0</span>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600 mb-3 text-xl">⏺</div>
+          <h3 class="font-semibold text-slate-900 mb-1">Record Actions</h3>
+          <p class="text-sm text-slate-500">Capture any mouse click, scroll, or keystroke into a reusable macro file.</p>
+        </div>
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-3 text-xl">▶</div>
+          <h3 class="font-semibold text-slate-900 mb-1">Replay Precisely</h3>
+          <p class="text-sm text-slate-500">Replay macros with exact timing, loop count, and Quick Mode for speed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── QUICK START ──────────── -->
+    <section id="quickstart" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="w-8 h-8 bg-blue-100 text-blue-700 rounded-lg flex items-center justify-center text-sm font-black">🚀</span>
+        Quick Start
+      </h2>
+
+      <h3 class="text-lg font-semibold text-slate-800 mb-4">1 — Installation</h3>
+      <div class="grid sm:grid-cols-2 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Option A · JAR</p>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">1</span>Install <strong>JDK 21+</strong> from Oracle or Adoptium.</li>
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">2</span>Download the latest <code class="bg-slate-100 px-1 rounded">.jar</code> from Releases.</li>
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">3</span>Double-click the jar, or run:</li>
+          </ol>
+          <pre class="mt-3 bg-slate-900 text-green-300 rounded-lg p-3 text-xs"><code>java -jar saMacros.jar</code></pre>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Option B · EXE (Windows)</p>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">1</span>Download the latest <code class="bg-slate-100 px-1 rounded">.exe</code> from Releases.</li>
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">2</span>Double-click to launch — JRE is bundled.</li>
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">3</span>Windows may show a SmartScreen warning; click <em>More info → Run anyway</em>.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-semibold text-slate-800 mb-4">2 — First Launch Checklist</h3>
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm mb-6">
+        <ul class="space-y-3 text-sm text-slate-700">
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+            <div><strong>Choose your language</strong> — open <em>Settings</em> and select a language from the combo box, or enable <em>Follow System Settings</em>.</div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+            <div><strong>Resize if needed</strong> — different languages affect button label width. Drag the window edge to fit all buttons.</div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+            <div><strong>Configure hotkeys</strong> — open <em>Settings → Macro Settings</em> to customise the Record / Stop / Play / Abort keys (defaults: F2 / F3 / F4 / F5).</div>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="mt-0.5 w-5 h-5 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold shrink-0">✓</span>
+            <div><strong>Allow accessibility</strong> — on macOS / Linux you may need to grant saMacros accessibility (input monitoring) permission for global hotkeys to work.</div>
+          </li>
+        </ul>
+      </div>
+
+      <h3 class="text-lg font-semibold text-slate-800 mb-3">3 — Your First Macro in 60 Seconds</h3>
+      <ol class="space-y-3">
+        <li class="flex gap-3 items-start bg-white border border-slate-200 rounded-xl px-5 py-4 shadow-sm">
+          <span class="step-circle bg-blue-600 text-white shrink-0">1</span>
+          <div><span class="font-medium">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1.5 py-0.5 text-xs">F2</kbd></span> (or click <em>Start Recording</em>). The status log shows <em>"Recording started"</em>.</div>
+        </li>
+        <li class="flex gap-3 items-start bg-white border border-slate-200 rounded-xl px-5 py-4 shadow-sm">
+          <span class="step-circle bg-blue-600 text-white shrink-0">2</span>
+          <div>Perform any mouse clicks, scrolls, or key presses on your desktop.</div>
+        </li>
+        <li class="flex gap-3 items-start bg-white border border-slate-200 rounded-xl px-5 py-4 shadow-sm">
+          <span class="step-circle bg-blue-600 text-white shrink-0">3</span>
+          <div><span class="font-medium">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1.5 py-0.5 text-xs">F3</kbd></span> (or click <em>Stop Recording</em>). The log shows the action count.</div>
+        </li>
+        <li class="flex gap-3 items-start bg-white border border-slate-200 rounded-xl px-5 py-4 shadow-sm">
+          <span class="step-circle bg-blue-600 text-white shrink-0">4</span>
+          <div><span class="font-medium">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1.5 py-0.5 text-xs">F4</kbd></span> (or click <em>Play Macro</em>). saMacros reproduces every action with exact timing.</div>
+        </li>
+        <li class="flex gap-3 items-start bg-white border border-slate-200 rounded-xl px-5 py-4 shadow-sm">
+          <span class="step-circle bg-blue-600 text-white shrink-0">5</span>
+          <div>Click <em>Save Macros</em> to export the recording as a <code class="bg-slate-100 px-1 rounded">.mmc</code> file for later use.</div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ──────────── RECORDING ──────────── -->
+    <section id="recording" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">⏺</span> Recording a Macro
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">How saMacros captures your actions in real time.</p>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <h3 class="font-semibold text-slate-800 mb-4">How Recording Works</h3>
+        <div class="space-y-3 text-sm text-slate-700">
+          <p>When you start recording, saMacros registers a global low-level hook (via <strong>JNativeHook</strong>) that captures all mouse and keyboard events at the OS level — even when the application window is not focused.</p>
+          <p>Each captured event is converted into a <strong>MouseAction</strong> object containing:</p>
+          <div class="overflow-x-auto mt-3">
+            <table class="w-full text-xs border-collapse">
+              <thead><tr class="bg-slate-50">
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Field</th>
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">x, y</td><td class="border border-slate-200 px-3 py-2">Screen coordinates</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">type</td><td class="border border-slate-200 px-3 py-2">1=press, 2=release, 3=wheel, 10=key press, 11=key release</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">button</td><td class="border border-slate-200 px-3 py-2">Mouse button index (1=left, 2=right, 3=middle)</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">delay</td><td class="border border-slate-200 px-3 py-2">Milliseconds elapsed since the previous action</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">keyCode / awtKeyCode</td><td class="border border-slate-200 px-3 py-2">Native and AWT key codes for keyboard events</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">wheelAmount</td><td class="border border-slate-200 px-3 py-2">Scroll distance (wheel events)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+        <p class="font-semibold mb-1">⚠ Important Notes</p>
+        <ul class="list-disc list-inside space-y-1">
+          <li>Actions are <strong>not</strong> captured while a macro is playing back (the <em>isReplayingInput</em> flag prevents re-entrant capture).</li>
+          <li>The Save button is disabled while recording to prevent data loss.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ──────────── PLAYBACK ──────────── -->
+    <section id="playback" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">▶</span> Playing Back a Macro
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Replay recorded or loaded macros with precision.</p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Starting Playback</h3>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-green-100 text-green-700 shrink-0">1</span>Ensure the action list is not empty (record or load first).</li>
+            <li class="flex gap-2"><span class="step-circle bg-green-100 text-green-700 shrink-0">2</span>Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-xs">F4</kbd> or click <em>Play Macro</em>.</li>
+            <li class="flex gap-2"><span class="step-circle bg-green-100 text-green-700 shrink-0">3</span>saMacros launches a dedicated playback thread and executes each action in order.</li>
+          </ol>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Loop &amp; Quick Mode</h3>
+          <ul class="space-y-2 text-sm text-slate-700">
+            <li><strong>Repeat count</strong> — set in <em>Settings → Macro Settings</em>. A value of <code class="bg-slate-100 px-1 rounded">0</code> means loop indefinitely.</li>
+            <li><strong>Quick Mode</strong> — skips inter-action delays; actions are executed as fast as the Robot allows. Enable in <em>Settings</em>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── PAUSE & RESUME ──────────── -->
+    <section id="pause" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">⏸</span> Pause &amp; Resume
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Intelligently interrupt and continue macro execution without losing state.</p>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <div class="grid sm:grid-cols-3 gap-6 text-sm">
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto bg-yellow-100 text-yellow-700 rounded-full flex items-center justify-center text-2xl mb-2">⏸</div>
+            <p class="font-semibold text-slate-800 mb-1">Pause</p>
+            <p class="text-slate-500">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-xs">F5</kbd> during playback. The playback thread suspends at the current action and waits on an internal lock.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto bg-green-100 text-green-700 rounded-full flex items-center justify-center text-2xl mb-2">▶</div>
+            <p class="font-semibold text-slate-800 mb-1">Resume</p>
+            <p class="text-slate-500">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-xs">F4</kbd> while paused. The lock is released and execution continues from exactly where it stopped.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-12 h-12 mx-auto bg-red-100 text-red-700 rounded-full flex items-center justify-center text-2xl mb-2">⏹</div>
+            <p class="font-semibold text-slate-800 mb-1">Abort</p>
+            <p class="text-slate-500">Press <kbd class="bg-slate-100 border border-slate-300 rounded px-1 py-0.5 text-xs">F5</kbd> while already paused. saMacros interrupts the thread and fully resets playback state.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
+        <p class="font-semibold mb-1">💡 State Machine Summary</p>
+        <p>Idle → <strong>Playing</strong> (F4) → <strong>Paused</strong> (F5) → Resume (F4) → Playing → Done → Idle</p>
+        <p class="mt-1">Paused → Abort (F5) → Idle</p>
+      </div>
+    </section>
+
+    <!-- ──────────── SAVE & LOAD ──────────── -->
+    <section id="save-load" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">💾</span> Save &amp; Load Macros
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Persist your recordings as <code class="bg-slate-100 px-1 rounded">.mmc</code> files and reload them any time.</p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">💾 Saving</h3>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">1</span>Stop recording (the Save button is disabled during recording).</li>
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">2</span>Click <em>Save Macros</em>. A file-chooser dialog opens at your last-used directory.</li>
+            <li class="flex gap-2"><span class="step-circle bg-blue-100 text-blue-700 shrink-0">3</span>Choose a filename and location. The file is saved as UTF-8 encoded CSV.</li>
+          </ol>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">📂 Loading</h3>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">1</span>Click <em>Load Macro</em> (also disabled during recording).</li>
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">2</span>Browse to your <code class="bg-slate-100 px-1 rounded">.mmc</code> file and confirm.</li>
+            <li class="flex gap-2"><span class="step-circle bg-indigo-100 text-indigo-700 shrink-0">3</span>The log shows the number of actions loaded. Press Play to execute.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm text-sm">
+        <h3 class="font-semibold text-slate-800 mb-3">.mmc File Format</h3>
+        <p class="text-slate-600 mb-3">Each line represents one action in CSV format:</p>
+        <pre class="bg-slate-900 text-green-300 rounded-lg p-3 text-xs overflow-x-auto"><code>x,y,type,button,delay,wheelAmount,keyCode,awtKeyCode
+# Example lines:
+960,540,1,1,250,0,0,0
+960,540,2,1,120,0,0,0
+0,0,10,0,80,0,65,65</code></pre>
+        <p class="text-slate-500 mt-2">The loader supports older file formats for backward compatibility.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── SETTINGS ──────────── -->
+    <section id="settings" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">⚙</span> Settings
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">All configuration is stored in <code class="bg-slate-100 px-1 rounded">%USERPROFILE%/AppData/saMacros/</code>.</p>
+
+      <div class="space-y-4">
+        <!-- General Settings -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-4">General Settings</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm border-collapse">
+              <thead><tr class="bg-slate-50">
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Setting</th>
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Config Key</th>
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100 text-xs">
+                <tr><td class="border border-slate-200 px-3 py-2">Follow System Settings</td><td class="border border-slate-200 px-3 py-2 font-mono">followSystemSettings</td><td class="border border-slate-200 px-3 py-2">Auto-detect system language and dark mode.</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Language</td><td class="border border-slate-200 px-3 py-2 font-mono">lang</td><td class="border border-slate-200 px-3 py-2">UI language: EN, ZH, JA, RU, KO, ES, FR (when not following system).</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Dark Mode</td><td class="border border-slate-200 px-3 py-2 font-mono">enableDarkMode</td><td class="border border-slate-200 px-3 py-2">Enable/disable dark theme (when not following system).</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Default Storage Path</td><td class="border border-slate-200 px-3 py-2 font-mono">defaultStoragePath</td><td class="border border-slate-200 px-3 py-2">Pre-fill the Save/Load dialog with this directory.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Macro Settings -->
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-4">Macro Settings</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm border-collapse">
+              <thead><tr class="bg-slate-50">
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Setting</th>
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100 text-xs">
+                <tr><td class="border border-slate-200 px-3 py-2">Repeat Count</td><td class="border border-slate-200 px-3 py-2">Number of times to loop the macro. <code>0</code> = infinite loop.</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Quick Mode</td><td class="border border-slate-200 px-3 py-2">Skip inter-action delays for maximum speed.</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Hotkey — Start Recording</td><td class="border border-slate-200 px-3 py-2">Default: <kbd class="bg-slate-100 border border-slate-300 rounded px-1">F2</kbd>. Click the key capture field and press your desired key.</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Hotkey — Stop Recording</td><td class="border border-slate-200 px-3 py-2">Default: <kbd class="bg-slate-100 border border-slate-300 rounded px-1">F3</kbd></td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Hotkey — Play / Resume</td><td class="border border-slate-200 px-3 py-2">Default: <kbd class="bg-slate-100 border border-slate-300 rounded px-1">F4</kbd></td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2">Hotkey — Pause / Abort</td><td class="border border-slate-200 px-3 py-2">Default: <kbd class="bg-slate-100 border border-slate-300 rounded px-1">F5</kbd></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── HOTKEY REFERENCE ──────────── -->
+    <section id="hotkeys" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="text-2xl">⌨</span> Hotkey Reference
+      </h2>
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <table class="w-full text-sm border-collapse">
+          <thead><tr class="bg-slate-50">
+            <th class="text-left border border-slate-200 px-4 py-3 font-semibold">Default Key</th>
+            <th class="text-left border border-slate-200 px-4 py-3 font-semibold">Action</th>
+            <th class="text-left border border-slate-200 px-4 py-3 font-semibold">Notes</th>
+          </tr></thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr>
+              <td class="border border-slate-200 px-4 py-3"><kbd class="bg-slate-100 border border-slate-300 rounded px-2 py-0.5 font-mono text-xs">F2</kbd></td>
+              <td class="border border-slate-200 px-4 py-3">Start Recording</td>
+              <td class="border border-slate-200 px-4 py-3 text-slate-500 text-xs">Global hotkey; works even when the app window is not focused.</td>
+            </tr>
+            <tr>
+              <td class="border border-slate-200 px-4 py-3"><kbd class="bg-slate-100 border border-slate-300 rounded px-2 py-0.5 font-mono text-xs">F3</kbd></td>
+              <td class="border border-slate-200 px-4 py-3">Stop Recording</td>
+              <td class="border border-slate-200 px-4 py-3 text-slate-500 text-xs">Finalises the recorded action list.</td>
+            </tr>
+            <tr>
+              <td class="border border-slate-200 px-4 py-3"><kbd class="bg-slate-100 border border-slate-300 rounded px-2 py-0.5 font-mono text-xs">F4</kbd></td>
+              <td class="border border-slate-200 px-4 py-3">Play Macro / Resume</td>
+              <td class="border border-slate-200 px-4 py-3 text-slate-500 text-xs">Starts playback, or resumes if currently paused.</td>
+            </tr>
+            <tr>
+              <td class="border border-slate-200 px-4 py-3"><kbd class="bg-slate-100 border border-slate-300 rounded px-2 py-0.5 font-mono text-xs">F5</kbd></td>
+              <td class="border border-slate-200 px-4 py-3">Pause / Abort</td>
+              <td class="border border-slate-200 px-4 py-3 text-slate-500 text-xs">First press pauses; second press (while paused) aborts.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-xs text-slate-400 mt-3">All hotkeys can be remapped in <em>Settings → Macro Settings → Hotkey Configuration</em>.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── TROUBLESHOOTING ──────────── -->
+    <section id="trouble" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🔧</span> Troubleshooting
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Common issues and solutions derived from the application's error-handling logic.</p>
+
+      <div class="space-y-4">
+
+        <!-- Issue 1 -->
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold flex items-center justify-center shrink-0">!</span>
+              <span class="font-medium text-slate-800">Hotkeys are not working / global input not captured</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> saMacros uses JNativeHook to capture global keyboard/mouse events. On some OS configurations, this requires special permissions.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li><strong>macOS:</strong> Go to <em>System Preferences → Privacy &amp; Security → Accessibility</em> and add the saMacros executable.</li>
+              <li><strong>Linux:</strong> Run as a user with input device access, or add your user to the <code class="bg-slate-100 px-1 rounded">input</code> group.</li>
+              <li><strong>Windows:</strong> Try running as Administrator if UAC is blocking native hooks.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Issue 2 -->
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold flex items-center justify-center shrink-0">!</span>
+              <span class="font-medium text-slate-800">Playback aborted unexpectedly — "Macro aborted" in log</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause A — Thread interrupted:</strong> The playback thread received an interrupt signal. This can happen if the JVM is shutting down.</p>
+            <p><strong>Cause B — Exception during action:</strong> The log shows <em>"Playback error: [message]"</em>. Check the console output for the full stack trace.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Re-record the macro on the same screen resolution and layout.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Issue 3 -->
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">?</span>
+              <span class="font-medium text-slate-800">Macro save failed — "Saving failed" in log</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> An <code class="bg-slate-100 px-1 rounded">IOException</code> occurred while writing the file. The error message appended in the log gives the exact reason.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Check that the target directory exists and is writable.</li>
+              <li>Ensure the filename contains no illegal characters.</li>
+              <li>Verify you have sufficient disk space.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Issue 4 -->
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center shrink-0">i</span>
+              <span class="font-medium text-slate-800">Settings reset to default after update</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> If <code class="bg-slate-100 px-1 rounded">config.cfg</code> cannot be parsed (e.g., it was corrupted or its schema changed), the application automatically calls <code class="bg-slate-100 px-1 rounded">resetToDefault()</code> and recreates the file.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Back up <code class="bg-slate-100 px-1 rounded">%USERPROFILE%\AppData\saMacros\config.cfg</code> before major version upgrades.</li>
+              <li>After the reset, reconfigure your preferred language, hotkeys, and repeat count in Settings.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Issue 5 -->
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-600 text-xs font-bold flex items-center justify-center shrink-0">i</span>
+              <span class="font-medium text-slate-800">Buttons are cut off / partially hidden</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> The selected UI language produces longer button labels that exceed the default window width.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Drag the window edge to make it wider.</li>
+              <li>Consider switching to a language with shorter button labels (English is usually the narrowest).</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ──────────── FOOTER ──────────── -->
+    <footer class="border-t border-slate-200 pt-8 pb-12 text-sm text-slate-400">
+      <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div>
+          <span class="font-semibold text-slate-600">saMacros v2.0.0</span> &nbsp;·&nbsp;
+          Apache License 2.0 &nbsp;·&nbsp;
+          <a href="https://github.com/Samera2022/saMacros" class="text-blue-500 hover:underline" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <div>Built by <a href="https://github.com/Samera2022" class="text-blue-500 hover:underline" target="_blank" rel="noopener">@Samera2022</a></div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- ═══════════════════ SIDEBAR HIGHLIGHT SCRIPT ═══════════════════ -->
+<script>
+(function () {
+  const links = document.querySelectorAll('.nav-link');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href')));
+
+  function onScroll() {
+    const scrollY = window.scrollY + 80;
+    let active = sections[0];
+    sections.forEach(s => { if (s && s.offsetTop <= scrollY) active = s; });
+    links.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + active.id);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

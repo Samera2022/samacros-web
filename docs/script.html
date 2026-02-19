@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>saMacros — Scripting Guide</title>
+  <link rel="stylesheet" href="tailwind.css" />
+  <style>
+    html { scroll-behavior: smooth; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+
+    .nav-link.active {
+      background-color: #eff6ff;
+      color: #2563eb;
+      font-weight: 600;
+      border-left: 3px solid #2563eb;
+    }
+    .nav-link {
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .nav-link:hover { background-color: #f8fafc; color: #1d4ed8; }
+
+    pre { overflow-x: auto; }
+    code { font-family: 'Menlo', 'Consolas', monospace; font-size: 0.875rem; }
+
+    .step-circle {
+      min-width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.875rem;
+    }
+
+    @media (max-width: 1023px) {
+      #sidebar { display: none; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+<!-- ═══════════════════ TOP HEADER ═══════════════════ -->
+<header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+  <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center gap-4">
+    <div class="w-9 h-9 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold text-lg select-none">S</div>
+    <div>
+      <span class="text-xl font-bold text-slate-900 tracking-tight">saMacros</span>
+      <span class="ml-3 text-sm text-slate-500 hidden sm:inline">Scripting Guide</span>
+    </div>
+    <div class="ml-auto flex items-center gap-2">
+      <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-semibold border border-amber-200">Paid Feature</span>
+      <span class="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-medium">v2.0.0</span>
+      <a href="user.html" class="text-xs text-blue-600 hover:underline ml-2">← User Manual</a>
+    </div>
+  </div>
+</header>
+
+<div class="max-w-screen-xl mx-auto flex min-h-screen">
+
+  <!-- ═══════════════════ LEFT SIDEBAR ═══════════════════ -->
+  <aside id="sidebar" class="w-64 shrink-0 sticky top-[57px] h-[calc(100vh-57px)] overflow-y-auto bg-white border-r border-slate-200 py-6 px-4">
+    <nav class="space-y-0.5 text-sm">
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Overview</p>
+      <a href="#intro"       class="nav-link block px-3 py-2 rounded-md text-slate-700">Introduction</a>
+      <a href="#installation" class="nav-link block px-3 py-2 rounded-md text-slate-700">Installation</a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mt-5 mb-2">Writing Scripts</p>
+      <a href="#metadata"    class="nav-link block px-3 py-2 rounded-md text-slate-700">Script Metadata</a>
+      <a href="#basics"      class="nav-link block px-3 py-2 rounded-md text-slate-700">Basic Usage</a>
+      <a href="#advanced"    class="nav-link block px-3 py-2 rounded-md text-slate-700">Advanced Actions</a>
+      <a href="#native"      class="nav-link block px-3 py-2 rounded-md text-slate-700">Native Access</a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mt-5 mb-2">Management</p>
+      <a href="#manager"     class="nav-link block px-3 py-2 rounded-md text-slate-700">Script Manager</a>
+      <a href="#deps"        class="nav-link block px-3 py-2 rounded-md text-slate-700">Dependencies</a>
+
+      <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mt-5 mb-2">Reference</p>
+      <a href="#api-mm"      class="nav-link block px-3 py-2 rounded-md text-slate-700">mm Object</a>
+      <a href="#api-ctx"     class="nav-link block px-3 py-2 rounded-md text-slate-700">ScriptContext</a>
+      <a href="#events"      class="nav-link block px-3 py-2 rounded-md text-slate-700">Event List</a>
+      <a href="#trouble"     class="nav-link block px-3 py-2 rounded-md text-slate-700">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+  <main class="flex-1 px-6 lg:px-12 py-10 max-w-4xl">
+
+    <!-- ──────────── INTRODUCTION ──────────── -->
+    <section id="intro" class="mb-16 scroll-mt-20">
+      <div class="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-2xl p-8 text-white shadow-lg mb-6">
+        <div class="flex items-center gap-4 mb-4">
+          <div class="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center text-3xl">⚙</div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <h1 class="text-3xl font-black tracking-tight">Scripting Guide</h1>
+              <span class="text-xs bg-amber-400 text-amber-900 px-2 py-0.5 rounded-full font-bold">Paid</span>
+            </div>
+            <p class="text-purple-200 text-sm">Extend saMacros with custom JavaScript powered by GraalVM</p>
+          </div>
+        </div>
+        <p class="text-purple-100 leading-relaxed max-w-2xl">
+          The saMacros scripting system gives you a full-featured <strong class="text-white">GraalVM JavaScript engine</strong>
+          to automate complex workflows beyond simple recording. Listen to application events, simulate actions
+          programmatically, read pixel colors, and integrate with external processes.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-2 text-xs font-medium">
+          <span class="bg-white/20 px-3 py-1 rounded-full">GraalVM JS Engine</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">Event-Driven API</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">Sandboxed &amp; Secure</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">Native Access Control</span>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+        <p class="font-semibold mb-1">💳 Paid Feature</p>
+        <p>JavaScript scripting is a premium feature. Please ensure your license includes scripting access before following this guide.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── INSTALLATION ──────────── -->
+    <section id="installation" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="text-2xl">📁</span> Installing Scripts
+      </h2>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-4">
+        <p class="text-sm text-slate-700 mb-4">Place your <code class="bg-slate-100 px-1 rounded">.js</code> script files inside the <strong>scripts</strong> directory in your saMacros data folder:</p>
+
+        <div class="space-y-3">
+          <div class="bg-slate-100 text-slate-700 rounded-lg px-4 py-2 text-sm font-mono">
+            <span class="text-slate-400">Windows: </span><strong>%USERPROFILE%\AppData\saMacros\scripts\</strong>
+          </div>
+          <div class="bg-slate-100 text-slate-700 rounded-lg px-4 py-2 text-sm font-mono">
+            <span class="text-slate-400">macOS / Linux: </span><strong>~/.local/share/saMacros/scripts/</strong>
+          </div>
+        </div>
+
+        <p class="text-sm text-slate-600 mt-4">Scripts are loaded automatically at application startup. To reload scripts without restarting, use the <em>Script Manager</em> in Settings.</p>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
+        <p class="font-semibold mb-1">💡 Tip</p>
+        <p>The <code class="bg-blue-100 px-1 rounded">scripts/</code> directory is created automatically the first time saMacros runs. If it does not exist, launch the app once and the folder will appear.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── SCRIPT METADATA ──────────── -->
+    <section id="metadata" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🏷</span> Script Metadata
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Every script must declare metadata variables at the top of the file, inside a <code class="bg-slate-100 px-1 rounded">// ==UserScript==</code> block.</p>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-6">
+        <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>// ==UserScript==
+var display_name = "My Awesome Script";      // Human-readable name shown in Script Manager
+var register_name = "my_awesome_script";     // Unique ID — lowercase, snake_case
+var author = "YourName";                     // Single author name
+var version = "1.0.0";                       // Semantic version
+var description = "What this script does.";  // Short description
+var available_version = "2.0.0~2.1.*";       // Compatible saMacros version range
+var hard_dependencies = [];                  // Script IDs that MUST be enabled
+var soft_dependencies = [];                  // Optional script IDs
+var requireNativeAccess = false;             // Set true for file I/O, network, etc.
+var requireNativeAccessDescription = "";     // Explain why native access is needed
+// ==/UserScript==</code></pre>
+
+        <div class="mt-5 overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="bg-slate-50">
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Variable</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Required</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Notes</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">display_name</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td><td class="border border-slate-200 px-3 py-2">Shown in Script Manager UI.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">register_name</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td><td class="border border-slate-200 px-3 py-2">Must be unique across all installed scripts. Used as the dependency identifier.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">author</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td><td class="border border-slate-200 px-3 py-2">Used for author-level native access whitelisting.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">version</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td><td class="border border-slate-200 px-3 py-2">Semantic version string.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">available_version</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td><td class="border border-slate-200 px-3 py-2">Supports wildcard (<code>*</code>) and range (<code>~</code>) syntax. Use <code>"*"</code> for any version.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">hard_dependencies</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td><td class="border border-slate-200 px-3 py-2">Array of <code>register_name</code> strings. Script will not load if any hard dep is missing.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">soft_dependencies</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td><td class="border border-slate-200 px-3 py-2">Optional; script still loads if these are missing.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">requireNativeAccess</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td><td class="border border-slate-200 px-3 py-2">If <code>true</code>, script is disabled by default until the user manually approves it.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">requireNativeAccessDescription</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td><td class="border border-slate-200 px-3 py-2">Displayed in the security approval dialog. Explain clearly why native access is needed.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── BASIC USAGE ──────────── -->
+    <section id="basics" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">📝</span> Basic Usage
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">The global <code class="bg-slate-100 px-1 rounded">mm</code> object is your entry point to the saMacros API.</p>
+
+      <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Logging</h3>
+          <p class="text-sm text-slate-600 mb-3">Write messages to the application log panel:</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>mm.log("Hello from my script!");</code></pre>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Listening to Events</h3>
+          <p class="text-sm text-slate-600 mb-3">Use <code class="bg-slate-100 px-1 rounded">mm.on(eventClassName, callback)</code> to react to application events. The first argument is the full Java class name of the event:</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>// Log a message when the app launches
+mm.on('io.github.samera2022.samacros.api.event.events.OnAppLaunchedEvent',
+  function(event) {
+    mm.log("App started! Version: " + event.getAppVersion());
+  }
+);
+
+// Log the number of actions when recording stops
+mm.on('io.github.samera2022.samacros.api.event.events.AfterRecordStopEvent',
+  function(event) {
+    mm.log("Recording stopped. Actions captured: " + event.getActionCount());
+  }
+);</code></pre>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Cancelling Events</h3>
+          <p class="text-sm text-slate-600 mb-3">Some events are <em>cancellable</em> — calling <code class="bg-slate-100 px-1 rounded">event.setCancelled(true)</code> prevents the default action from occurring:</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>// Prevent recording from starting when a condition is not met
+mm.on('io.github.samera2022.samacros.api.event.events.BeforeRecordStartEvent',
+  function(event) {
+    if (!isReadyToRecord()) {
+      event.setCancelled(true);
+      mm.log("Recording blocked: system not ready.");
+    }
+  }
+);</code></pre>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Showing Notifications</h3>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>var ctx = mm.getContext();
+
+// Show a system tray notification
+ctx.showToast("Task Complete", "Your macro finished successfully!");</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── ADVANCED ACTIONS ──────────── -->
+    <section id="advanced" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🖱</span> Advanced Actions
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Use <code class="bg-slate-100 px-1 rounded">mm.getContext()</code> to access the <code class="bg-slate-100 px-1 rounded">ScriptContext</code> for programmatic action simulation and screen reading.</p>
+
+      <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Simulating Mouse Clicks</h3>
+          <p class="text-sm text-slate-600 mb-3">Pass an action object with the same fields used in recorded macros:</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>var ctx = mm.getContext();
+
+// Left mouse button press at (960, 540)
+ctx.simulate({ x: 960, y: 540, type: 1, button: 1, delay: 0 });
+// Left mouse button release at same position
+ctx.simulate({ x: 960, y: 540, type: 2, button: 1, delay: 80 });
+
+// Right click
+ctx.simulate({ x: 200, y: 300, type: 1, button: 2, delay: 100 });
+ctx.simulate({ x: 200, y: 300, type: 2, button: 2, delay: 60 });</code></pre>
+
+          <div class="mt-3 overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead><tr class="bg-slate-50">
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">type value</th>
+                <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Meaning</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">1</td><td class="border border-slate-200 px-3 py-2">Mouse button press</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">2</td><td class="border border-slate-200 px-3 py-2">Mouse button release</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">3</td><td class="border border-slate-200 px-3 py-2">Mouse wheel scroll</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">10</td><td class="border border-slate-200 px-3 py-2">Key press</td></tr>
+                <tr><td class="border border-slate-200 px-3 py-2 font-mono">11</td><td class="border border-slate-200 px-3 py-2">Key release</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Reading Pixel Colors</h3>
+          <p class="text-sm text-slate-600 mb-3">Use <code class="bg-slate-100 px-1 rounded">getPixelColor(x, y)</code> to read a screen pixel and make conditional decisions:</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>var ctx = mm.getContext();
+var color = ctx.getPixelColor(500, 300);
+
+mm.log("R=" + color.getRed() + " G=" + color.getGreen() + " B=" + color.getBlue());
+
+// Example: only click if the button is green
+if (color.getGreen() > 200 && color.getRed() < 50) {
+  ctx.simulate({ x: 500, y: 300, type: 1, button: 1, delay: 0 });
+  ctx.simulate({ x: 500, y: 300, type: 2, button: 1, delay: 50 });
+}</code></pre>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">Reading App Configuration</h3>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>var ctx = mm.getContext();
+var config = ctx.getAppConfig();
+
+var lang = config.getString("lang");
+var darkMode = config.getBoolean("enableDarkMode");
+mm.log("Language: " + lang + ", Dark mode: " + darkMode);</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── NATIVE ACCESS ──────────── -->
+    <section id="native" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🔐</span> Native Access
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Scripts requiring file I/O, network access, or external process execution must request Native Access explicitly.</p>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-4">
+        <h3 class="font-semibold text-slate-800 mb-3">Requesting Native Access</h3>
+        <p class="text-sm text-slate-600 mb-3">Set these variables in your script metadata:</p>
+        <pre class="bg-slate-900 text-green-300 rounded-lg p-4 text-xs overflow-x-auto"><code>var requireNativeAccess = true;
+var requireNativeAccessDescription = "This script reads log files from the system to generate a report.";</code></pre>
+      </div>
+
+      <div class="space-y-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-3">What Happens at First Load</h3>
+          <ol class="space-y-2 text-sm text-slate-700">
+            <li class="flex gap-2"><span class="step-circle bg-red-100 text-red-700 shrink-0">1</span>saMacros detects <code class="bg-slate-100 px-1 rounded">requireNativeAccess = true</code> in the script file.</li>
+            <li class="flex gap-2"><span class="step-circle bg-red-100 text-red-700 shrink-0">2</span>The script file is renamed to <code class="bg-slate-100 px-1 rounded">.js.disabled</code> and marked as disabled.</li>
+            <li class="flex gap-2"><span class="step-circle bg-amber-100 text-amber-700 shrink-0">3</span>The Script Manager shows the script with a warning icon and your <code class="bg-slate-100 px-1 rounded">requireNativeAccessDescription</code>.</li>
+            <li class="flex gap-2"><span class="step-circle bg-green-100 text-green-700 shrink-0">4</span>The user reviews the description and manually enables the script in <em>Settings → Script Manager</em>.</li>
+            <li class="flex gap-2"><span class="step-circle bg-green-100 text-green-700 shrink-0">5</span>The script is added to <code class="bg-slate-100 px-1 rounded">white_list.json</code> (by script name or author) and loads on next startup.</li>
+          </ol>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+          <p class="font-semibold mb-1">⚠ Best Practice</p>
+          <p>Only request native access when absolutely necessary. Write a clear, honest <code class="bg-amber-100 px-1 rounded">requireNativeAccessDescription</code> — users see this in the security dialog and it directly affects their trust in your script.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── SCRIPT MANAGER ──────────── -->
+    <section id="manager" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🗂</span> Script Manager
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Manage all installed scripts from <em>Settings → Script Manager</em>.</p>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-6 shadow-sm mb-4">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead><tr class="bg-slate-50">
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Column / Action</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100 text-sm">
+              <tr><td class="border border-slate-200 px-3 py-2 font-medium">Enabled toggle</td><td class="border border-slate-200 px-3 py-2">Enable or disable a script. Disabled scripts are not loaded and their listeners are removed.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-medium">Issues column</td><td class="border border-slate-200 px-3 py-2">Displays warnings for missing dependencies, version mismatches, or pending native access approval.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-medium">Native Access button</td><td class="border border-slate-200 px-3 py-2">Grant native access to a script or its author. A security warning is shown before approval.</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-medium">Whitelist</td><td class="border border-slate-200 px-3 py-2">Approved scripts/authors are stored in <code class="bg-slate-100 px-1 rounded">white_list.json</code> and granted native access automatically on future startups.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
+        <p class="font-semibold mb-1">💡 Reload without restart</p>
+        <p>After placing a new script file in the <code class="bg-blue-100 px-1 rounded">scripts/</code> directory, use the Script Manager's reload button (or restart the app) to pick it up.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── DEPENDENCIES ──────────── -->
+    <section id="deps" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🔗</span> Dependencies
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Scripts can declare dependencies on other scripts to ensure load order and availability.</p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-2">Hard Dependencies</h3>
+          <p class="text-sm text-slate-600 mb-3">Declared in <code class="bg-slate-100 px-1 rounded">hard_dependencies</code>. The dependent script <strong>will not load</strong> if any hard dependency is missing or disabled.</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-3 text-xs overflow-x-auto"><code>var hard_dependencies = ["utils_library", "network_helper"];</code></pre>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+          <h3 class="font-semibold text-slate-800 mb-2">Soft Dependencies</h3>
+          <p class="text-sm text-slate-600 mb-3">Declared in <code class="bg-slate-100 px-1 rounded">soft_dependencies</code>. The script <strong>still loads</strong> if these are absent, but enhanced features may be unavailable.</p>
+          <pre class="bg-slate-900 text-green-300 rounded-lg p-3 text-xs overflow-x-auto"><code>var soft_dependencies = ["optional_plugin"];</code></pre>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-900">
+        <p class="font-semibold mb-1">⚠ Circular Dependencies</p>
+        <p>If Script A lists Script B as a hard dependency, and Script B lists Script A, both will fail to load. Break the cycle by converting one link to a soft dependency or extracting shared code into a third script.</p>
+      </div>
+    </section>
+
+    <!-- ──────────── API: mm OBJECT ──────────── -->
+    <section id="api-mm" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="text-2xl">📖</span> <code class="font-mono text-blue-700">mm</code> — ScriptAPI Object
+      </h2>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead><tr class="bg-slate-50">
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Method</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Parameters</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100 text-xs">
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">on()</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">eventClassName, callback</td>
+                <td class="border border-slate-200 px-3 py-2">Register a listener for the named event. The first argument is the full Java class name of the event (see <a href="#events" class="text-blue-600 underline">Event List</a>).</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">log()</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">message</td>
+                <td class="border border-slate-200 px-3 py-2">Print a message to the application's log panel.</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">getContext()</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">—</td>
+                <td class="border border-slate-200 px-3 py-2">Returns the <code>ScriptContext</code> object for advanced interactions (see <a href="#api-ctx" class="text-blue-600 underline">ScriptContext</a>).</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">cleanup()</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">—</td>
+                <td class="border border-slate-200 px-3 py-2">Unregister all event listeners registered by this script. Called automatically when the script is disabled.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── API: ScriptContext ──────────── -->
+    <section id="api-ctx" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="text-2xl">📖</span> <code class="font-mono text-purple-700">mm.getContext()</code> — ScriptContext
+      </h2>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border-collapse">
+            <thead><tr class="bg-slate-50">
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Method</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Returns</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100 text-xs">
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">simulate(action)</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">void</td>
+                <td class="border border-slate-200 px-3 py-2">Execute a mouse/keyboard action via Java Robot. The <code>action</code> object must include <code>x</code>, <code>y</code>, <code>type</code>, <code>button</code>, <code>delay</code> fields.</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">getPixelColor(x, y)</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">Color</td>
+                <td class="border border-slate-200 px-3 py-2">Read the pixel color at the given screen coordinates. Returns a Java <code>Color</code> with <code>getRed()</code>, <code>getGreen()</code>, <code>getBlue()</code> methods.</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">showToast(title, msg)</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">void</td>
+                <td class="border border-slate-200 px-3 py-2">Show a system tray notification with the given title and message. Falls back to console output if system tray is unavailable.</td>
+              </tr>
+              <tr>
+                <td class="border border-slate-200 px-3 py-2 font-mono">getAppConfig()</td>
+                <td class="border border-slate-200 px-3 py-2 font-mono text-slate-500">IConfig</td>
+                <td class="border border-slate-200 px-3 py-2">Returns the application configuration with <code>getBoolean(key)</code>, <code>getInt(key)</code>, <code>getString(key)</code> accessors.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── EVENT LIST ──────────── -->
+    <section id="events" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+        <span class="text-2xl">📋</span> Event List
+      </h2>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm mb-4">
+        <p class="text-xs text-slate-500 mb-3">All event classes live under the base package <code class="bg-slate-100 px-1 rounded">io.github.samera2022.samacros.api.event.events</code>. Pass the full class name to <code class="bg-slate-100 px-1 rounded">mm.on()</code>.</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="bg-slate-50">
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Event Class</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Trigger</th>
+              <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Cancellable?</th>
+            </tr></thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnAppLaunchedEvent</td><td class="border border-slate-200 px-3 py-2">Application startup completes</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">BeforeRecordStartEvent</td><td class="border border-slate-200 px-3 py-2">Recording is about to start</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">AfterRecordStopEvent</td><td class="border border-slate-200 px-3 py-2">Recording has stopped</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">BeforePlaybackStartEvent</td><td class="border border-slate-200 px-3 py-2">Playback is about to begin</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">BeforeStepExecuteEvent</td><td class="border border-slate-200 px-3 py-2">Before each individual action during playback</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">AfterStepExecuteEvent</td><td class="border border-slate-200 px-3 py-2">After each individual action completes</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnLoopCompleteEvent</td><td class="border border-slate-200 px-3 py-2">After all actions in one loop iteration</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnInputCapturedEvent</td><td class="border border-slate-200 px-3 py-2">A mouse/keyboard input is captured during recording</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnActionAddedEvent</td><td class="border border-slate-200 px-3 py-2">An action is added to the recording list</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnMacroLoadEvent</td><td class="border border-slate-200 px-3 py-2">A macro file has been loaded (content modifiable)</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnMacroSaveEvent</td><td class="border border-slate-200 px-3 py-2">A macro is about to be saved (content modifiable)</td><td class="border border-slate-200 px-3 py-2 text-green-600 font-medium">Yes</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnConfigChangedEvent</td><td class="border border-slate-200 px-3 py-2">A settings value has changed</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnMenuInitEvent</td><td class="border border-slate-200 px-3 py-2">System tray menu is being built</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+              <tr><td class="border border-slate-200 px-3 py-2 font-mono">OnTooltipDisplayEvent</td><td class="border border-slate-200 px-3 py-2">A tooltip is about to be shown</td><td class="border border-slate-200 px-3 py-2 text-slate-400">No</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── TROUBLESHOOTING ──────────── -->
+    <section id="trouble" class="mb-16 scroll-mt-20">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2 flex items-center gap-2">
+        <span class="text-2xl">🔧</span> Troubleshooting
+      </h2>
+      <p class="text-slate-500 mb-6 text-sm">Common scripting issues and how to resolve them.</p>
+
+      <div class="space-y-4">
+
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">?</span>
+              <span class="font-medium text-slate-800">Script is not loading / stays disabled</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Reason 1 — Native access required:</strong> The script has <code class="bg-slate-100 px-1 rounded">requireNativeAccess = true</code> but has not been approved. Go to <em>Settings → Script Manager</em> and grant access.</p>
+            <p><strong>Reason 2 — Renamed to .js.disabled:</strong> saMacros renames unapproved native-access scripts. Re-enable from the Script Manager.</p>
+            <p><strong>Reason 3 — Missing hard dependency:</strong> A <code class="bg-slate-100 px-1 rounded">hard_dependencies</code> entry is not installed or is disabled. Check the Issues column in Script Manager.</p>
+            <p><strong>Reason 4 — Circular dependency:</strong> Two scripts each declare the other as a dependency. Break the cycle by converting one link to a soft dependency.</p>
+            <p><strong>Reason 5 — Version mismatch:</strong> The <code class="bg-slate-100 px-1 rounded">available_version</code> range does not include the running saMacros version. Update the metadata.</p>
+          </div>
+        </details>
+
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold flex items-center justify-center shrink-0">!</span>
+              <span class="font-medium text-slate-800">"ScriptAPI Error: Event class not found" in the log</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> You passed an incorrect or misspelled event class name to <code class="bg-slate-100 px-1 rounded">mm.on()</code>. Event class names are case-sensitive and must include the full package path.</p>
+            <p>Example of a correct class name:</p>
+            <pre class="bg-slate-900 text-green-300 rounded-lg p-3 text-xs overflow-x-auto"><code>io.github.samera2022.samacros.api.event.events.OnAppLaunchedEvent</code></pre>
+            <p>Refer to the <a href="#events" class="text-blue-600 underline">Event List</a> section for all valid names.</p>
+          </div>
+        </details>
+
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold flex items-center justify-center shrink-0">!</span>
+              <span class="font-medium text-slate-800">"Error executing script callback for event" in the log</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> An unhandled exception was thrown inside your event callback. The full stack trace is printed to the console.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Wrap your callback body in a <code class="bg-slate-100 px-1 rounded">try { ... } catch(e) { mm.log(e); }</code> block to surface errors clearly.</li>
+              <li>Check that any variables you reference inside the callback are defined and in scope.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="bg-white border border-slate-200 rounded-xl shadow-sm group">
+          <summary class="flex items-center justify-between cursor-pointer px-5 py-4 select-none">
+            <div class="flex items-center gap-3">
+              <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">?</span>
+              <span class="font-medium text-slate-800">Macro playback is blocked by my script</span>
+            </div>
+            <svg class="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </summary>
+          <div class="px-5 pb-5 text-sm text-slate-700 space-y-2 border-t border-slate-100 pt-4">
+            <p><strong>Cause:</strong> Your script is listening to <code class="bg-slate-100 px-1 rounded">BeforePlaybackStartEvent</code> or <code class="bg-slate-100 px-1 rounded">BeforeStepExecuteEvent</code> and calling <code class="bg-slate-100 px-1 rounded">event.setCancelled(true)</code> unintentionally.</p>
+            <ul class="list-disc list-inside space-y-1 text-slate-600">
+              <li>Add a conditional check before cancelling — ensure the event is only cancelled when you actually intend to block it.</li>
+              <li>Temporarily disable your script in the Script Manager to verify it is the cause.</li>
+            </ul>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- ──────────── FOOTER ──────────── -->
+    <footer class="border-t border-slate-200 pt-8 pb-12 text-sm text-slate-400">
+      <div class="flex flex-wrap gap-4 items-center justify-between">
+        <div>
+          <span class="font-semibold text-slate-600">saMacros v2.0.0</span> &nbsp;·&nbsp;
+          Apache License 2.0 &nbsp;·&nbsp;
+          <a href="https://github.com/Samera2022/saMacros" class="text-blue-500 hover:underline" target="_blank" rel="noopener">GitHub</a>
+          &nbsp;·&nbsp;
+          <a href="index.html" class="text-blue-500 hover:underline">← User Manual</a>
+        </div>
+        <div>Built by <a href="https://github.com/Samera2022" class="text-blue-500 hover:underline" target="_blank" rel="noopener">@Samera2022</a></div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- ═══════════════════ SIDEBAR HIGHLIGHT SCRIPT ═══════════════════ -->
+<script>
+(function () {
+  const links = document.querySelectorAll('.nav-link');
+  const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href')));
+
+  function onScroll() {
+    const scrollY = window.scrollY + 80;
+    let active = sections[0];
+    sections.forEach(s => { if (s && s.offsetTop <= scrollY) active = s; });
+    links.forEach(l => {
+      l.classList.toggle('active', l.getAttribute('href') === '#' + active.id);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
