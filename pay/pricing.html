@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>saMacros 订阅选择</title>
-    <link rel="icon" type="image/png" href="imgs/saMacrosIcon.png">
+    <link rel="icon" type="image/png" href="../imgs/saMacrosIcon.png">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Rubik:wght@400;600&display=swap" rel="stylesheet" />
     <style>
         :root {
@@ -53,6 +53,31 @@
             position: absolute;
             top: 0;
             right: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.15);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .home-icon-btn:hover {
+            background: rgba(148, 163, 184, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .home-icon-btn img {
+            width: 20px;
+            height: 20px;
         }
 
         .lang-toggle {
@@ -182,6 +207,9 @@
     <div class="wrap">
         <header>
             <div class="header-actions">
+                <a class="home-icon-btn" href="../index.html" title="返回首页">
+                    <img src="../imgs/saMacrosIcon.png" alt="saMacros 首页">
+                </a>
                 <button class="lang-toggle" id="langToggle" title="切换语言">EN</button>
             </div>
             <h1 data-i18n="pricing-title">saMacros 订阅选择</h1>
@@ -244,8 +272,8 @@
 
         async function loadTranslations() {
             try {
-                const zhResponse = await fetch('langs/zh_cn.json');
-                const enResponse = await fetch('langs/en_us.json');
+                const zhResponse = await fetch('../langs/zh_cn.json');
+                const enResponse = await fetch('../langs/en_us.json');
 
                 const zhData = await zhResponse.json();
                 const enData = await enResponse.json();
@@ -344,7 +372,7 @@
                 },
                 onApprove: (data, actions) => {
                     return actions.order.capture().then(() => {
-                        const nextUrl = `index.html?paypal_order_id=${encodeURIComponent(data.orderID)}`;
+                        const nextUrl = `activating.html?paypal_order_id=${encodeURIComponent(data.orderID)}`;
                         window.location.href = nextUrl;
                     });
                 }

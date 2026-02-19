@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>saMacros Snapshot Activation Center</title>
-    <link rel="icon" type="image/png" href="imgs/saMacrosIcon.png">
+    <link rel="icon" type="image/png" href="../imgs/saMacrosIcon.png">
     <style>
         :root {
             --bg-1: #0f172a;
@@ -69,6 +69,31 @@
             position: absolute;
             top: 0;
             right: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-icon-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: rgba(148, 163, 184, 0.15);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .home-icon-btn:hover {
+            background: rgba(148, 163, 184, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .home-icon-btn img {
+            width: 20px;
+            height: 20px;
         }
 
         .lang-toggle {
@@ -363,12 +388,14 @@
     <div class="container">
         <header>
             <div class="header-actions">
+                <a class="home-icon-btn" href="../index.html" title="返回首页">
+                    <img src="../imgs/saMacrosIcon.png" alt="saMacros 首页">
+                </a>
                 <button class="lang-toggle" id="langToggle" title="切换语言">EN</button>
             </div>
             <h1 data-i18n="activating-title">🔐 saMacros 激活中心</h1>
             <p class="subtitle" data-i18n="activating-subtitle">2026 版本 - 安全离线激活</p>
         </header>
-
         <form id="activationForm">
             <div class="input-group">
                 <label for="platform" data-i18n="activating-label-platform">购买平台</label>
@@ -478,8 +505,8 @@
 
         async function loadTranslations() {
             try {
-                const zhResponse = await fetch('langs/zh_cn.json');
-                const enResponse = await fetch('langs/en_us.json');
+                const zhResponse = await fetch('../langs/zh_cn.json');
+                const enResponse = await fetch('../langs/en_us.json');
 
                 const zhData = await zhResponse.json();
                 const enData = await enResponse.json();

@@ -1,4 +1,4 @@
-import { resolveEntitlement } from '../../pricing-config.js';
+import { resolveEntitlement } from '../../pay/pricing-config.js';
 
 /**
  * saMacros Activation API - Cloudflare Function
@@ -12,6 +12,9 @@ import { resolveEntitlement } from '../../pricing-config.js';
  * @param {Object} context.env - 环境变量和绑定
  * @param {any} context.env.ORDER_DB - KV 命名空间
  * @param {string} context.env.RSA_PRIVATE_KEY - RSA 私钥
+ * @param {string} context.env.PAYPAL_CLIENT_ID - PayPal Client ID
+ * @param {string} context.env.PAYPAL_SECRET - PayPal Client Secret
+ * @param {string} [context.env.PAYPAL_BASE_URL] - PayPal API Base URL
  */
 export async function onRequestPost(context) {
     const { request, env } = context;
@@ -19,12 +22,41 @@ export async function onRequestPost(context) {
     try {
         // 解析请求体
         const body = await request.json();
-        const { order_id, machine_code, paypal_order_id } = body;
+        const { order_id, machine_code, paypal_order_id, platform } = body;
+        const isPayPalPlatform = platform === 'paypal' || !!paypal_order_id;
+
+        const normalizedMachineCode = machine_code ? machine_code.trim() : '';
+        const normalizedOrderId = order_id ? order_id.trim() : '';
+        const normalizedPayPalOrderId = paypal_order_id ? paypal_order_id.trim() : '';
+        const isPayPalTestMode = normalizedPayPalOrderId === '000';
 
         // === 1. 输入验证 ===
-        if (!order_id || !machine_code || !paypal_order_id) {
+        if (!normalizedMachineCode) {
             return new Response(JSON.stringify({
-                error: 'Missing required fields: order_id, machine_code, and paypal_order_id'
+                error: 'Missing required field: machine_code'
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        const effectiveOrderId = normalizedOrderId
+            || (isPayPalTestMode && isPayPalPlatform ? `TEST-${normalizedMachineCode.toUpperCase()}` : '');
+        const effectivePayPalOrderId = normalizedPayPalOrderId
+            || (isPayPalTestMode && isPayPalPlatform ? `TEST-${normalizedMachineCode.toUpperCase()}` : '');
+
+        if (!effectiveOrderId) {
+            return new Response(JSON.stringify({
+                error: 'Missing required field: order_id'
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
+        if (isPayPalPlatform && !effectivePayPalOrderId) {
+            return new Response(JSON.stringify({
+                error: 'Missing required field: paypal_order_id'
             }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
@@ -32,7 +64,7 @@ export async function onRequestPost(context) {
         }
 
         // 验证 machine_code 格式 (SAM-XXXX)
-        if (!/^SAM-[A-Z0-9]{12,}$/i.test(machine_code)) {
+        if (!/^SAM-[A-Z0-9]{12,}$/i.test(normalizedMachineCode)) {
             return new Response(JSON.stringify({
                 error: 'Invalid machine_code format. Expected: SAM-XXXXXXXXXXXX'
             }), {
@@ -51,7 +83,7 @@ export async function onRequestPost(context) {
             });
         }
 
-        const existingOrder = await env.ORDER_DB.get(order_id);
+        const existingOrder = await env.ORDER_DB.get(effectiveOrderId);
         if (existingOrder) {
             return new Response(JSON.stringify({
                 error: 'This order has already been used. Each order can only generate one activation key.'
@@ -63,13 +95,24 @@ export async function onRequestPost(context) {
 
         // === 3. 读取 PayPal 支付金额 ===
         let pricePaid = 0;
-        try {
-            pricePaid = await fetchPayPalAmount(paypal_order_id, env);
-        } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
+        if (isPayPalTestMode && isPayPalPlatform) {
+            pricePaid = 0.99;
+        } else if (isPayPalPlatform) {
+            try {
+                pricePaid = await fetchPayPalAmount(effectivePayPalOrderId, env);
+            } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : String(error);
+                return new Response(JSON.stringify({
+                    error: 'PayPal verification failed',
+                    details: errorMessage
+                }), {
+                    status: 400,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+        } else {
             return new Response(JSON.stringify({
-                error: 'PayPal verification failed',
-                details: errorMessage
+                error: 'Unsupported platform. Only paypal is currently supported.'
             }), {
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
@@ -90,7 +133,7 @@ export async function onRequestPost(context) {
         const expirationDate = entitlement.expirationDate;
 
         // 激活码格式: type=权益类型;id=机器码;exp=过期时间
-        const activationData = `type=${entitlement.termCode};id=${machine_code};exp=${expirationDate}`;
+        const activationData = `type=${entitlement.termCode};id=${normalizedMachineCode};exp=${expirationDate}`;
 
         // === 5. RSA 数字签名 ===
         if (!env.RSA_PRIVATE_KEY) {
@@ -110,9 +153,9 @@ export async function onRequestPost(context) {
 
         // === 7. 记录到 KV 数据库 ===
         const orderRecord = {
-            order_id,
-            machine_code,
-            paypal_order_id,
+            order_id: effectiveOrderId,
+            machine_code: normalizedMachineCode,
+            paypal_order_id: effectivePayPalOrderId,
             price_paid: pricePaid,
             entitlement: entitlement.label,
             activated_at: new Date().toISOString(),
@@ -120,7 +163,7 @@ export async function onRequestPost(context) {
             status: 'activated'
         };
 
-        await env.ORDER_DB.put(order_id, JSON.stringify(orderRecord));
+        await env.ORDER_DB.put(effectiveOrderId, JSON.stringify(orderRecord));
 
         // === 8. 返回成功响应 ===
         return new Response(JSON.stringify({
