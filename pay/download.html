@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>saMacros 下载中心</title>
+    <link rel="icon" type="image/png" href="../imgs/saMacrosIcon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --bg-light: #f7fafc;
+            --bg-white: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --text-dark: #e2e8f0;
+            --text-light: #a0aec0;
+            --bg-light: #2d3748;
+            --bg-white: #1a202c;
+            --border: #4a5568;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--bg-white);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .icon-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-dark);
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.4rem;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.08);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .muted {
+            color: var(--text-light);
+        }
+
+        .btn-primary {
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.6rem;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.25);
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                padding: 0.9rem 1rem;
+            }
+
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a class="logo" href="../index.html">
+                <img src="../imgs/saMacrosIcon.png" alt="saMacros 图标">
+                <span>saMacros</span>
+            </a>
+            <div class="controls">
+                <button class="icon-btn" id="themeToggle" title="切换主题">🌙</button>
+                <button class="icon-btn" id="langToggle" title="切换语言">EN</button>
+                <a class="icon-btn" href="./pricing.html" data-i18n="download-go-pricing">前往订阅</a>
+                <a class="icon-btn" href="../index.html" data-i18n="download-back-home">返回首页</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1 data-i18n="download-heading">下载中心</h1>
+            <p data-i18n="download-subtitle">根据你的平台选择安装包</p>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <h3 data-i18n="download-platform-windows">Windows</h3>
+                <button class="btn-primary" id="windowsDownloadBtn" data-i18n="download-windows-btn">下载 Windows 版本</button>
+            </article>
+
+            <article class="card">
+                <h3 data-i18n="download-platform-linux">Linux</h3>
+                <p class="muted" data-i18n="download-coming-soon">敬请期待</p>
+            </article>
+
+            <article class="card">
+                <h3 data-i18n="download-platform-macos">MacOS</h3>
+                <p class="muted" data-i18n="download-coming-soon">敬请期待</p>
+            </article>
+        </section>
+    </main>
+
+    <script>
+        const html = document.documentElement;
+        const themeToggle = document.getElementById('themeToggle');
+        const langToggle = document.getElementById('langToggle');
+        const windowsDownloadBtn = document.getElementById('windowsDownloadBtn');
+        const THEME_KEY = 'saMacros-theme';
+        const LANG_KEY = 'saMacros-lang';
+
+        let currentLang = localStorage.getItem(LANG_KEY) || 'zh';
+        let translations = {};
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                themeToggle.textContent = '☀️';
+                themeToggle.title = currentLang === 'zh' ? '切换为浅色模式' : 'Switch to light mode';
+                localStorage.setItem(THEME_KEY, 'dark');
+            } else {
+                html.removeAttribute('data-theme');
+                themeToggle.textContent = '🌙';
+                themeToggle.title = currentLang === 'zh' ? '切换为暗色模式' : 'Switch to dark mode';
+                localStorage.setItem(THEME_KEY, 'light');
+            }
+        }
+
+        function initTheme() {
+            let theme = localStorage.getItem(THEME_KEY);
+            if (!theme) {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            setTheme(theme);
+        }
+
+        function t(key, fallback) {
+            if (translations[currentLang] && translations[currentLang][key]) {
+                return translations[currentLang][key];
+            }
+            return fallback || key;
+        }
+
+        function updateLanguageDisplay() {
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+            const bundle = translations[currentLang] || {};
+
+            document.title = bundle['download-page-title'] || 'saMacros Download Center';
+            langToggle.textContent = currentLang === 'zh' ? 'EN' : '中';
+            langToggle.title = currentLang === 'zh' ? 'Switch to English' : '切换为中文';
+
+            document.querySelectorAll('[data-i18n]').forEach((el) => {
+                const key = el.getAttribute('data-i18n');
+                if (bundle[key]) {
+                    el.textContent = bundle[key];
+                }
+            });
+
+            const currentTheme = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            setTheme(currentTheme);
+        }
+
+        async function loadTranslations() {
+            const zhResponse = await fetch('../langs/zh_cn.json');
+            const enResponse = await fetch('../langs/en_us.json');
+
+            const zhData = await zhResponse.json();
+            const enData = await enResponse.json();
+
+            translations = {
+                zh: zhData.download || {},
+                en: enData.download || {}
+            };
+        }
+
+        async function initLanguage() {
+            try {
+                await loadTranslations();
+            } catch (error) {
+                console.error('Failed to load translations:', error);
+            }
+            updateLanguageDisplay();
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+
+        langToggle.addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem(LANG_KEY, currentLang);
+            updateLanguageDisplay();
+        });
+
+        windowsDownloadBtn.addEventListener('click', () => {
+            const fileName = 'saMacros.exe';
+            const downloadUrl = `/api/download?file=${encodeURIComponent(fileName)}`;
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        initTheme();
+        initLanguage();
+    </script>
+</body>
+</html>

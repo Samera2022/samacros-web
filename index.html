@@ -1802,11 +1802,10 @@ mm.on('AfterRecordStopEvent', (event) => {
             observer.observe(card);
         });
 
-        // Button click handlers
-        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
-            btn.addEventListener('click', function() {
-                console.log('Button clicked:', this.textContent);
-                // Add your download or CTA logic here
+        // Download button handlers
+        document.querySelectorAll('[data-i18n="download-btn"]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                window.location.href = 'pay/download.html';
             });
         });
 

@@ -11,7 +11,7 @@ export const ENTITLEMENT_RULES = [
     { min: 12.99, label: '1 year', termCode: '1Y', days: 365 },
     { min: 6.99, label: '6 months', termCode: '6M', days: 180 },
     { min: 3.99, label: '3 months', termCode: '3M', days: 90 },
-    { min: 0.99, label: '1 month', termCode: '1M', days: 30 }
+    { min: 1.49, label: '1 month', termCode: '1M', days: 30 }
 ];
 
 export function resolveEntitlement(pricePaid, now = new Date()) {

@@ -10,3 +10,8 @@ id = "772f9be0b010429fada255b3800e9d99"
 # 环境变量
 [vars]
 ENVIRONMENT = "production"
+
+[[r2_buckets]]
+binding = "MY_BUCKET"
+bucket_name = "samacros-exe-download"
+preview_bucket_name = "samacros-exe-download"

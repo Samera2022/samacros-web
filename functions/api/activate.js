@@ -28,7 +28,6 @@ export async function onRequestPost(context) {
         const normalizedMachineCode = machine_code ? machine_code.trim() : '';
         const normalizedOrderId = order_id ? order_id.trim() : '';
         const normalizedPayPalOrderId = paypal_order_id ? paypal_order_id.trim() : '';
-        const isPayPalTestMode = normalizedPayPalOrderId === '000';
 
         // === 1. 输入验证 ===
         if (!normalizedMachineCode) {
@@ -40,10 +39,8 @@ export async function onRequestPost(context) {
             });
         }
 
-        const effectiveOrderId = normalizedOrderId
-            || (isPayPalTestMode && isPayPalPlatform ? `TEST-${normalizedMachineCode.toUpperCase()}` : '');
-        const effectivePayPalOrderId = normalizedPayPalOrderId
-            || (isPayPalTestMode && isPayPalPlatform ? `TEST-${normalizedMachineCode.toUpperCase()}` : '');
+        const effectiveOrderId = normalizedOrderId;
+        const effectivePayPalOrderId = normalizedPayPalOrderId;
 
         if (!effectiveOrderId) {
             return new Response(JSON.stringify({
@@ -95,9 +92,7 @@ export async function onRequestPost(context) {
 
         // === 3. 读取 PayPal 支付金额 ===
         let pricePaid = 0;
-        if (isPayPalTestMode && isPayPalPlatform) {
-            pricePaid = 0.99;
-        } else if (isPayPalPlatform) {
+        if (isPayPalPlatform) {
             try {
                 pricePaid = await fetchPayPalAmount(effectivePayPalOrderId, env);
             } catch (error) {

@@ -267,5 +267,17 @@
     "activating-alert-other-required": "Please enter the Payment Order ID",
     "activating-alert-success": "✅ Activation key generated successfully. Please save it safely.",
     "activating-alert-request-failed": "HTTP {status}: Request failed"
+  },
+  "download": {
+    "download-page-title": "saMacros Download Center",
+    "download-heading": "Download Center",
+    "download-subtitle": "Choose an installer package for your platform",
+    "download-platform-windows": "Windows",
+    "download-platform-linux": "Linux",
+    "download-platform-macos": "MacOS",
+    "download-windows-btn": "Download for Windows",
+    "download-coming-soon": "Coming Soon",
+    "download-go-pricing": "Go to Pricing",
+    "download-back-home": "Back to Home"
   }
 }

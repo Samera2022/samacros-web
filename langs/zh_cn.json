@@ -267,6 +267,18 @@
     "activating-alert-other-required": "请填写支付订单号",
     "activating-alert-success": "✅ 激活码生成成功！请妥善保存。",
     "activating-alert-request-failed": "HTTP {status}: 请求失败"
+  },
+  "download": {
+    "download-page-title": "saMacros 下载中心",
+    "download-heading": "下载中心",
+    "download-subtitle": "根据你的平台选择安装包",
+    "download-platform-windows": "Windows",
+    "download-platform-linux": "Linux",
+    "download-platform-macos": "MacOS",
+    "download-windows-btn": "下载 Windows 版本",
+    "download-coming-soon": "敬请期待",
+    "download-go-pricing": "前往订阅",
+    "download-back-home": "返回首页"
   }
 }
 
