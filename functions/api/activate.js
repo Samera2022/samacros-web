@@ -18,6 +18,8 @@ import { resolveEntitlement } from '../../pay/pricing-config.js';
  */
 export async function onRequestPost(context) {
     const { request, env } = context;
+    const licenseType = 'PERSONAL';
+    const entitle = 'personal';
 
     try {
         // 解析请求体
@@ -127,8 +129,8 @@ export async function onRequestPost(context) {
         const entitlement = resolveEntitlement(pricePaid);
         const expirationDate = entitlement.expirationDate;
 
-        // 激活码格式: type=权益类型;id=机器码;exp=过期时间
-        const activationData = `type=${entitlement.termCode};id=${normalizedMachineCode};exp=${expirationDate}`;
+        // 激活码格式: type=权益类型;term=时长;id=机器码;exp=过期时间
+        const activationData = `type=${licenseType};term=${entitlement.termCode};id=${normalizedMachineCode};exp=${expirationDate}`;
 
         // === 5. RSA 数字签名 ===
         if (!env.RSA_PRIVATE_KEY) {
@@ -152,6 +154,9 @@ export async function onRequestPost(context) {
             machine_code: normalizedMachineCode,
             paypal_order_id: effectivePayPalOrderId,
             price_paid: pricePaid,
+            type: licenseType,
+            term: entitlement.termCode,
+            entitle,
             entitlement: entitlement.label,
             activated_at: new Date().toISOString(),
             expiration_date: expirationDate,
@@ -164,6 +169,9 @@ export async function onRequestPost(context) {
         return new Response(JSON.stringify({
             success: true,
             activation_key: activationKey,
+            type: licenseType,
+            term: entitlement.termCode,
+            entitle,
             price_paid: pricePaid,
             entitlement: entitlement.label,
             expiration_date: expirationDate,
