@@ -98,7 +98,7 @@
       All interfaces are sourced from the <code class="bg-white/20 px-1 rounded">samacros-api</code> module.
     </p>
     <div class="mt-4 flex flex-wrap gap-2 text-xs font-medium">
-      <span class="bg-white/20 px-3 py-1 rounded-full">GraalVM JS Runtime</span>
+      <span class="bg-white/20 px-3 py-1 rounded-full">QuickJS JS Runtime</span>
       <span class="bg-white/20 px-3 py-1 rounded-full">15 Event Types</span>
       <span class="bg-white/20 px-3 py-1 rounded-full">9 Context Sub-APIs</span>
       <span class="bg-white/20 px-3 py-1 rounded-full">Sandboxed by Default</span>
@@ -111,7 +111,7 @@
     </div>
     <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
       <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Engine</p>
-      <p class="text-sm text-slate-600">GraalVM Polyglot JavaScript — ES2020 compatible.</p>
+      <p class="text-sm text-slate-600">QuickJS embedded JavaScript — ES2020 compatible.</p>
     </div>
     <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
       <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest mb-1">Package Base</p>
@@ -120,7 +120,7 @@
   </div>
   <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 text-xs text-blue-900">
     <span class="font-bold">ℹ Java Interop Note:</span>
-    GraalVM exposes Java objects directly to JavaScript. Java <code class="bg-blue-100 px-1 rounded">List</code> objects use <code class="bg-blue-100 px-1 rounded">.size()</code> (not <code class="bg-blue-100 px-1 rounded">.length</code>) to get the element count.
+    The QuickJS runtime exposes Java objects directly to JavaScript. Java <code class="bg-blue-100 px-1 rounded">List</code> objects use <code class="bg-blue-100 px-1 rounded">.size()</code> (not <code class="bg-blue-100 px-1 rounded">.length</code>) to get the element count.
     Java <code class="bg-blue-100 px-1 rounded">java.awt.Point</code> objects expose <code class="bg-blue-100 px-1 rounded">.x</code> and <code class="bg-blue-100 px-1 rounded">.y</code> as direct fields.
     Java <code class="bg-blue-100 px-1 rounded">java.awt.Color</code> objects expose <code class="bg-blue-100 px-1 rounded">.getRed()</code>, <code class="bg-blue-100 px-1 rounded">.getGreen()</code>, <code class="bg-blue-100 px-1 rounded">.getBlue()</code> methods returning 0–255.
   </div>
@@ -525,7 +525,7 @@ ctx.simulate({ x:0, y:0, type:11, button:0, delay:50,  wheelAmount:0, keyCode:0,
       <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Returns</th>
       <th class="text-left border border-slate-200 px-3 py-2 font-semibold">Description</th>
     </tr></thead>
-    <tbody class="divide-y divide-slate-100"><tr><td class="border border-slate-200 px-3 py-2 font-mono">getAppVersion()</td><td class="border border-slate-200 px-3 py-2 font-mono">string</td><td class="border border-slate-200 px-3 py-2">saMacros version string, e.g. <code>"2.0.0"</code>.</td></tr><tr><td class="border border-slate-200 px-3 py-2 font-mono">getRuntimeEnv()</td><td class="border border-slate-200 px-3 py-2 font-mono">string</td><td class="border border-slate-200 px-3 py-2">Runtime identifier, e.g. <code>"GraalVM"</code>, <code>"JRE 21"</code>.</td></tr></tbody>
+    <tbody class="divide-y divide-slate-100"><tr><td class="border border-slate-200 px-3 py-2 font-mono">getAppVersion()</td><td class="border border-slate-200 px-3 py-2 font-mono">string</td><td class="border border-slate-200 px-3 py-2">saMacros version string, e.g. <code>"2.0.0"</code>.</td></tr><tr><td class="border border-slate-200 px-3 py-2 font-mono">getRuntimeEnv()</td><td class="border border-slate-200 px-3 py-2 font-mono">string</td><td class="border border-slate-200 px-3 py-2">Runtime identifier, e.g. <code>"QuickJS"</code>, <code>"JRE 21"</code>.</td></tr></tbody>
   </table><pre class="bg-slate-900 text-green-300 rounded-lg p-3 text-xs overflow-x-auto mt-3"><code>mm.on('...OnAppLaunchedEvent', function(e) {
   mm.log('saMacros ' + e.getAppVersion() + ' on ' + e.getRuntimeEnv());
 });</code></pre>
