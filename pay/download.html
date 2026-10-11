@@ -117,6 +117,25 @@
             font-size: 1.05rem;
         }
 
+        .notice {
+            margin: 1.2rem auto 0;
+            max-width: 760px;
+            border: 1px solid #f6ad55;
+            background: #fffaf0;
+            color: #9c4221;
+            border-radius: 10px;
+            padding: 0.9rem 1rem;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.55;
+        }
+
+        [data-theme="dark"] .notice {
+            border-color: #dd6b20;
+            background: rgba(221, 107, 32, 0.15);
+            color: #fbd38d;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -135,6 +154,29 @@
             font-size: 1.25rem;
             margin-bottom: 0.8rem;
             color: var(--text-dark);
+        }
+
+        .download-list {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .download-item {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.9rem;
+            background: var(--bg-light);
+        }
+
+        .download-item h4 {
+            margin-bottom: 0.45rem;
+            font-size: 1.02rem;
+        }
+
+        .download-item p {
+            margin-bottom: 0.7rem;
+            line-height: 1.45;
+            font-size: 0.93rem;
         }
 
         .muted {
@@ -188,12 +230,31 @@
         <section class="hero">
             <h1 data-i18n="download-heading">下载中心</h1>
             <p data-i18n="download-subtitle">根据你的平台选择安装包</p>
+            <div class="notice" data-i18n="download-license-warning">注意：Java 与 Rust 许可证格式不同。同一时间请只安装并激活其中一个版本，否则可能需要重复激活。</div>
         </section>
 
         <section class="grid">
             <article class="card">
                 <h3 data-i18n="download-platform-windows">Windows</h3>
-                <button class="btn-primary" id="windowsDownloadBtn" data-i18n="download-windows-btn">下载 Windows 版本</button>
+                <div class="download-list">
+                    <section class="download-item">
+                        <h4 data-i18n="download-rust-standard-title">Rust 版本（标准）</h4>
+                        <p class="muted" data-i18n="download-rust-standard-desc">文件名：saMacros.exe。体积略大，但被 Microsoft 拦截概率相对更低。</p>
+                        <button class="btn-primary" id="rustDownloadBtn" data-i18n="download-rust-standard-btn">下载 saMacros.exe</button>
+                    </section>
+
+                    <section class="download-item">
+                        <h4 data-i18n="download-rust-upx-title">Rust 版本（UPX 压缩）</h4>
+                        <p class="muted" data-i18n="download-rust-upx-desc">文件名：saMacros-upx.exe。体积更小，但被 Microsoft 拦截概率会更高。</p>
+                        <button class="btn-primary" id="rustUpxDownloadBtn" data-i18n="download-rust-upx-btn">下载 saMacros-upx.exe</button>
+                    </section>
+
+                    <section class="download-item">
+                        <h4 data-i18n="download-java-title">Java 版本（压缩包）</h4>
+                        <p class="muted" data-i18n="download-java-desc">保留原 Java 压缩包下载（saMacros.zip）。请勿与 Rust 版本同时激活。</p>
+                        <button class="btn-primary" id="javaZipDownloadBtn" data-i18n="download-java-btn">下载 saMacros.zip</button>
+                    </section>
+                </div>
             </article>
 
             <article class="card">
@@ -212,7 +273,9 @@
         const html = document.documentElement;
         const themeToggle = document.getElementById('themeToggle');
         const langToggle = document.getElementById('langToggle');
-        const windowsDownloadBtn = document.getElementById('windowsDownloadBtn');
+        const rustDownloadBtn = document.getElementById('rustDownloadBtn');
+        const rustUpxDownloadBtn = document.getElementById('rustUpxDownloadBtn');
+        const javaZipDownloadBtn = document.getElementById('javaZipDownloadBtn');
         const THEME_KEY = 'saMacros-theme';
         const LANG_KEY = 'saMacros-lang';
 
@@ -300,8 +363,7 @@
             updateLanguageDisplay();
         });
 
-        windowsDownloadBtn.addEventListener('click', () => {
-            const fileName = 'saMacros.exe';
+        function triggerDownload(fileName) {
             const downloadUrl = `/api/download?file=${encodeURIComponent(fileName)}`;
             const link = document.createElement('a');
             link.href = downloadUrl;
@@ -309,6 +371,18 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        rustDownloadBtn.addEventListener('click', () => {
+            triggerDownload('saMacros.exe');
+        });
+
+        rustUpxDownloadBtn.addEventListener('click', () => {
+            triggerDownload('saMacros-upx.exe');
+        });
+
+        javaZipDownloadBtn.addEventListener('click', () => {
+            triggerDownload('saMacros.zip');
         });
 
         initTheme();
